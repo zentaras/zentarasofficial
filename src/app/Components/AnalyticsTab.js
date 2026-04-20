@@ -386,7 +386,7 @@ export default function OptimizedAnalytics({ applications }) {
               "Add more applications to unlock actionable insights."
             )}
           </div>
-
+ 
         </div>
       )}
     </div>
