@@ -4,8 +4,7 @@ import { useMemo, useState } from "react";
 import {
   PieChart, Pie, BarChart, Bar, AreaChart, Area,
   Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, RadarChart, Radar, PolarGrid,
-  PolarAngleAxis, PolarRadiusAxis,
+  ResponsiveContainer,
 } from "recharts";
 
 // ── Read CSS variables from :root so the chart colours respect the theme ──
@@ -184,16 +183,11 @@ export default function OptimizedAnalytics({ applications }) {
     const jobTypeData  = Object.entries(byJobType).map(([name, value]) => ({ name, value }));
     const responseRate = Math.round(((byStatus.Interview + byStatus.Offer) / total) * 100);
     const offerRate    = Math.round((byStatus.Offer / total) * 100);
-    const radarData    = platformSuccess.slice(0, 5).map(p => ({
-      platform: p.name.length > 9 ? p.name.slice(0, 9) + "…" : p.name,
-      rate:  p.rate,
-      total: Math.min(100, p.total * 10),
-    }));
 
     return {
       total, byStatus, responseRate, offerRate,
       platformSuccess, dailyTrend, weeklyResponse,
-      workTypeData, jobTypeData, radarData,
+      workTypeData, jobTypeData,
       bestPlatform: platformSuccess[0],
     };
   }, [applications, timeFilter]);
@@ -375,23 +369,6 @@ export default function OptimizedAnalytics({ applications }) {
               </div>
             </ChartCard>
           </div>
-
-          {/* 5 — Platform radar (≥3 platforms) */}
-          {stats.radarData?.length >= 3 && (
-            <ChartCard title="Platform Activity Radar" height={260}>
-              <ResponsiveContainer width="100%" height="100%" tabIndex={-1}>
-                <RadarChart data={stats.radarData} margin={{ top: 10, right: 28, bottom: 10, left: 28 }}>
-                  <PolarGrid stroke={T.border} />
-                  <PolarAngleAxis dataKey="platform" tick={{ fontSize: 11, fill: T.textS }} />
-                  <PolarRadiusAxis tick={false} axisLine={false} domain={[0, 100]} />
-                  <Radar name="Success rate" dataKey="rate" stroke={T.accent} fill={T.accent} fillOpacity={.18} strokeWidth={2} />
-                  <Radar name="Volume" dataKey="total" stroke={T.green} fill={T.green} fillOpacity={.1} strokeWidth={1.5} strokeDasharray="4 3" />
-                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: T.textS }} />
-                  <Tooltip content={<CustomTooltip suffix="%" />} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </ChartCard>
-          )}
 
           {/* Insight strip */}
           <div className="analytics-insight">

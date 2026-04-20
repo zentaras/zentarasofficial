@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 const STATUS_COLORS = {
   Applied: "#3b82f6",
@@ -51,6 +51,188 @@ function getStreakData(applications) {
 
   return { streak, appliedToday, missedYesterday };
 }
+
+// function TodaysTasks() {
+//   const [tasks, setTasks] = useState([]);
+//   const [input, setInput] = useState("");
+
+//   const addTask = () => {
+//     const text = input.trim();
+//     if (!text) return;
+//     setTasks((prev) => [
+//       ...prev,
+//       { id: Date.now(), text, done: false },
+//     ]);
+//     setInput("");
+//   };
+
+//   const toggle = (id) =>
+//     setTasks((prev) =>
+//       prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+//     );
+
+//   const remove = (id) =>
+//     setTasks((prev) => prev.filter((t) => t.id !== id));
+
+//   const done = tasks.filter((t) => t.done).length;
+//   const pct = tasks.length > 0 ? Math.round((done / tasks.length) * 100) : 0;
+
+//   return (
+//     <div className="card" style={{ marginBottom: 20 }}>
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           alignItems: "center",
+//           marginBottom: 14,
+//         }}
+//       >
+//         <div className="card-title" style={{ marginBottom: 0 }}>
+//           Today's Tasks
+//         </div>
+//         {tasks.length > 0 && (
+//           <span
+//             style={{
+//               fontSize: 11,
+//               color: "var(--text-muted)",
+//               background: "var(--bg-page)",
+//               border: "1px solid var(--border)",
+//               borderRadius: 99,
+//               padding: "2px 8px",
+//             }}
+//           >
+//             {tasks.length} task{tasks.length !== 1 ? "s" : ""}
+//           </span>
+//         )}
+//       </div>
+
+//       {/* Input row */}
+//       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+//         <input
+//           type="text"
+//           value={input}
+//           placeholder="Add a task for today…"
+//           maxLength={120}
+//           onChange={(e) => setInput(e.target.value)}
+//           onKeyDown={(e) => e.key === "Enter" && addTask()}
+//           style={{
+//             flex: 1,
+//             padding: "7px 12px",
+//             borderRadius: "var(--radius-sm)",
+//             border: "1px solid var(--border-light)",
+//             background: "var(--bg-page)",
+//             color: "var(--text-primary)",
+//             fontSize: 13,
+//             fontFamily: "'DM Sans', sans-serif",
+//             outline: "none",
+//           }}
+//         />
+//         <button
+//           onClick={addTask}
+//           className="btn-primary"
+//           style={{ padding: "7px 14px", fontSize: 13 }}
+//         >
+//           + Add
+//         </button>
+//       </div>
+
+//       {/* Empty state */}
+//       {tasks.length === 0 && (
+//         <div
+//           style={{
+//             textAlign: "center",
+//             padding: "20px 0 8px",
+//             fontSize: 13,
+//             color: "var(--text-muted)",
+//           }}
+//         >
+//           No tasks yet — add one above to get started.
+//         </div>
+//       )}
+
+//       {/* Task list */}
+//       {tasks.length > 0 && (
+//         <>
+//           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+//             {tasks.map((task) => (
+//               <li
+//                 key={task.id}
+//                 style={{
+//                   display: "flex",
+//                   alignItems: "center",
+//                   gap: 10,
+//                   padding: "8px 0",
+//                   borderBottom: "1px solid var(--border)",
+//                 }}
+//               >
+//                 <input
+//                   type="checkbox"
+//                   checked={task.done}
+//                   onChange={() => toggle(task.id)}
+//                   style={{ width: 15, height: 15, cursor: "pointer", accentColor: "var(--green)" }}
+//                 />
+//                 <span
+//                   onClick={() => toggle(task.id)}
+//                   style={{
+//                     flex: 1,
+//                     fontSize: 13,
+//                     color: task.done ? "var(--text-muted)" : "var(--text-primary)",
+//                     textDecoration: task.done ? "line-through" : "none",
+//                     cursor: "pointer",
+//                     userSelect: "none",
+//                   }}
+//                 >
+//                   {task.text}
+//                 </span>
+//                 <button
+//                   onClick={() => remove(task.id)}
+//                   style={{
+//                     background: "none",
+//                     border: "none",
+//                     color: "var(--text-muted)",
+//                     fontSize: 16,
+//                     cursor: "pointer",
+//                     padding: "0 2px",
+//                     lineHeight: 1,
+//                     opacity: 0.6,
+//                   }}
+//                   title="Remove"
+//                 >
+//                   ×
+//                 </button>
+//               </li>
+//             ))}
+//           </ul>
+
+//           {/* Progress bar */}
+//           <div style={{ marginTop: 12 }}>
+//             <div className="progress-bar-wrap" style={{ height: 4 }}>
+//               <div
+//                 className="progress-bar"
+//                 style={{
+//                   width: `${pct}%`,
+//                   background: pct === 100 ? "var(--green)" : "var(--accent)",
+//                   transition: "width 0.3s ease",
+//                 }}
+//               />
+//             </div>
+//             <div
+//               style={{
+//                 fontSize: 11,
+//                 color: "var(--text-muted)",
+//                 textAlign: "right",
+//                 marginTop: 5,
+//               }}
+//             >
+//               {done} of {tasks.length} done
+//             </div>
+//           </div>
+//         </>
+//       )}
+//     </div>
+//   );
+// }
+
 
 function fmtResponseDays(d) {
   if (d === null || d === undefined) return "—";
@@ -191,232 +373,6 @@ function StreakCard({ applications }) {
                 : "No applications today yet. The market doesn't wait."}
         </div>
       </div>
-    </div>
-  );
-}
-
-function TodaysPlan({ applications }) {
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const saved = localStorage.getItem("statuscode_today_tasks");
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return [
-      { id: 1, text: "Follow up on pending applications", done: false },
-      { id: 2, text: "Revise resume for target role", done: false },
-    ];
-  });
-  const [newTask, setNewTask] = useState("");
-  const [adding, setAdding] = useState(false);
-
-  // Auto-generate follow-up tasks from apps
-  const followUps = useMemo(() => {
-    return applications
-      .filter((a) => {
-        if (a.status !== "Applied" || !a.followUpDate) return false;
-        return new Date(a.followUpDate) <= new Date();
-      })
-      .slice(0, 3);
-  }, [applications]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("statuscode_today_tasks", JSON.stringify(tasks));
-    } catch {}
-  }, [tasks]);
-
-  const toggle = (id) =>
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
-    );
-
-  const addTask = () => {
-    if (!newTask.trim()) return;
-    setTasks((prev) => [
-      ...prev,
-      { id: Date.now(), text: newTask.trim(), done: false },
-    ]);
-    setNewTask("");
-    setAdding(false);
-  };
-
-  const removeTask = (id) =>
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-
-  const doneCount = tasks.filter((t) => t.done).length;
-
-  return (
-    <div className="card" style={{ marginBottom: 20 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 14,
-        }}
-      >
-        <div>
-          <div className="card-title" style={{ marginBottom: 2 }}>
-            Today's Plan
-          </div>
-          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
-            {doneCount}/{tasks.length} completed
-          </div>
-        </div>
-        <button
-          className="btn-ghost"
-          style={{ fontSize: 11, padding: "5px 12px" }}
-          onClick={() => setAdding(true)}
-        >
-          + Add Task
-        </button>
-      </div>
-
-      {followUps.length > 0 && (
-        <div
-          style={{
-            marginBottom: 12,
-            padding: "10px 12px",
-            borderRadius: "var(--radius-sm)",
-            background: "rgba(234,179,8,0.06)",
-            border: "1px solid rgba(234,179,8,0.2)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 11,
-              color: "var(--yellow)",
-              fontWeight: 700,
-              marginBottom: 6,
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-            }}
-          >
-            Follow-ups Due
-          </div>
-          {followUps.map((a) => (
-            <div
-              key={a.id}
-              style={{
-                fontSize: 12,
-                color: "var(--text-secondary)",
-                padding: "2px 0",
-              }}
-            >
-              Follow up with {a.company} — {a.role}
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "8px 10px",
-              borderRadius: "var(--radius-sm)",
-              background: task.done ? "var(--bg-hover)" : "transparent",
-              border: "1px solid var(--border)",
-              transition: "all 0.15s",
-            }}
-          >
-            <div
-              onClick={() => toggle(task.id)}
-              style={{
-                width: 16,
-                height: 16,
-                borderRadius: 4,
-                border: `2px solid ${task.done ? "var(--accent)" : "var(--border-light)"}`,
-                background: task.done ? "var(--accent)" : "transparent",
-                flexShrink: 0,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.15s",
-              }}
-            >
-              {task.done && (
-                <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
-                  <path
-                    d="M1 3L3 5L7 1"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </div>
-            <span
-              style={{
-                flex: 1,
-                fontSize: 13,
-                color: task.done
-                  ? "var(--text-muted)"
-                  : "var(--text-secondary)",
-                textDecoration: task.done ? "line-through" : "none",
-                cursor: "pointer",
-              }}
-              onClick={() => toggle(task.id)}
-            >
-              {task.text}
-            </span>
-            <button
-              onClick={() => removeTask(task.id)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--text-muted)",
-                cursor: "pointer",
-                fontSize: 14,
-                lineHeight: 1,
-                padding: "0 2px",
-                opacity: 0.5,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = 0.5)}
-            >
-              x
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {adding && (
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <input
-            autoFocus
-            className="form-input"
-            placeholder="Add a task..."
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") addTask();
-              if (e.key === "Escape") setAdding(false);
-            }}
-            style={{ fontSize: 12 }}
-          />
-          <button
-            className="btn-primary"
-            style={{ padding: "6px 14px", fontSize: 12 }}
-            onClick={addTask}
-          >
-            Add
-          </button>
-          <button
-            className="btn-ghost"
-            style={{ padding: "6px 10px", fontSize: 12 }}
-            onClick={() => setAdding(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
     </div>
   );
 }
@@ -639,11 +595,10 @@ function ActivityTimeline({ applications }) {
             alignItems: "center",
             marginBottom: 14,
           }}
-         >
+        >
           <div className="card-title" style={{ marginBottom: 0 }}>
             Activity Timeline
           </div>
-          
         </div>
 
         <TimelineList events={preview} cardBg="var(--bg-card)" />
@@ -782,10 +737,7 @@ export default function Dashboard({
     <div>
       {/* Streak & daily target */}
       <StreakCard applications={applications} />
-
-      {/* Today's plan */}
-      <TodaysPlan applications={applications} />
-
+      {/* <TodaysTasks /> */}
       <div
         style={{
           display: "grid",
