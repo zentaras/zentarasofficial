@@ -1,35 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const GROQ_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY;
 const DAILY_LIMIT = 10;
-const STORAGE_KEY = "resumeMatcher_usage";
-const HISTORY_KEY = "resumeMatcher_history";
 
 const JOB_SECTION_WEIGHTS = [
-  { key: "experience",     label: "Work Experience",          points: 25 },
-  { key: "projects",       label: "Projects",                 points: 20 },
-  { key: "technicalSkills",label: "Technical Skills",         points: 15 },
-  { key: "certifications", label: "Certifications",           points: 15 },
-  { key: "education",      label: "Education",                points: 10 },
-  { key: "summary",        label: "Bio / Professional Summary",points: 10 },
-  { key: "achievements",   label: "Achievements / Awards",    points:  5 },
+  { key: "experience",      label: "Work Experience",           points: 25 },
+  { key: "projects",        label: "Projects",                  points: 20 },
+  { key: "technicalSkills", label: "Technical Skills",          points: 15 },
+  { key: "certifications",  label: "Certifications",            points: 15 },
+  { key: "education",       label: "Education",                 points: 10 },
+  { key: "summary",         label: "Bio / Professional Summary",points: 10 },
+  { key: "achievements",    label: "Achievements / Awards",     points:  5 },
 ];
 
 const INTERNSHIP_SECTION_WEIGHTS = [
-  { key: "projects",       label: "Projects",                 points: 30 },
-  { key: "technicalSkills",label: "Technical Skills",         points: 20 },
-  { key: "certifications", label: "Certifications",           points: 20 },
-  { key: "education",      label: "Education",                points: 10 },
-  { key: "summary",        label: "Bio / Professional Summary",points: 10 },
-  { key: "achievements",   label: "Achievements / Awards",    points: 10 },
+  { key: "projects",        label: "Projects",                  points: 30 },
+  { key: "technicalSkills", label: "Technical Skills",          points: 20 },
+  { key: "certifications",  label: "Certifications",            points: 20 },
+  { key: "education",       label: "Education",                 points: 10 },
+  { key: "summary",         label: "Bio / Professional Summary",points: 10 },
+  { key: "achievements",    label: "Achievements / Awards",     points: 10 },
 ];
 
 function getSectionWeights(jobType) {
   return jobType === "internship" ? INTERNSHIP_SECTION_WEIGHTS : JOB_SECTION_WEIGHTS;
 }
 
+// ── Mobile hook ───────────────────────────────────────────────────────────────
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -41,51 +40,64 @@ function useIsMobile() {
   return isMobile;
 }
 
-function getISTNow() {
-  return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+// ── DB API helpers ─────────────────────────────────────────────────────────────
+async function fetchRemaining() {
+  try {
+    const res = await fetch("/api/resume/usage");
+    if (!res.ok) return DAILY_LIMIT;
+    const data = await res.json();
+    return data.remaining ?? DAILY_LIMIT;
+  } catch {
+    return DAILY_LIMIT;
+  }
 }
-function getISTDateStr() { return getISTNow().toISOString().split("T")[0]; }
-function getFormattedDateTime() {
-  return getISTNow().toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata", year: "numeric", month: "short",
-    day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true,
+
+async function incrementUsageAPI() {
+  const res = await fetch("/api/resume/usage", { method: "POST" });
+  if (!res.ok) throw new Error("Daily limit reached");
+  const data = await res.json();
+  return data.remaining ?? 0;
+}
+
+async function fetchHistory() {
+  try {
+    const res = await fetch("/api/resume/history");
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.analyses || []).map((a) => ({
+      id: a.id,
+      formattedTime: new Date(a.createdAt).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }),
+      resumeVersion: a.resumeVersion,
+      matchScore: a.matchScore,
+      verdict: a.verdict,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+async function saveToHistoryAPI(payload) {
+  await fetch("/api/resume/history", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
 }
 
-function getUsageData() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { count: 0, date: getISTDateStr() }; }
-  catch { return { count: 0, date: getISTDateStr() }; }
-}
-function saveUsageData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
-function getRemainingUses() {
-  const u = getUsageData(), today = getISTDateStr();
-  return u.date !== today ? DAILY_LIMIT : Math.max(0, DAILY_LIMIT - u.count);
-}
-function incrementUsage() {
-  const today = getISTDateStr(), u = getUsageData();
-  saveUsageData(u.date !== today ? { count: 1, date: today } : { count: u.count + 1, date: today });
-}
-function getHistory() {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
-  catch { return []; }
-}
-function saveToHistory(analysis) {
-  const history = getHistory();
-  history.unshift({
-    id: Date.now(), formattedTime: getFormattedDateTime(),
-    role: analysis.role, jobType: analysis.jobType,
-    resumeVersion: analysis.resumeVersion, experience: analysis.experience,
-    matchScore: analysis.matchScore, verdict: analysis.verdict,
-    fullAnalysis: analysis,
-  });
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 50)));
-}
-
-// ── Score Ring ──────────────────────────────────────────────────────────────
+// ── Score Ring ─────────────────────────────────────────────────────────────────
 function ScoreRing({ score, size = 100 }) {
   const r = 38, circ = 2 * Math.PI * r;
   const fill = circ - (score / 100) * circ;
-  const color = score >= 75 ? "var(--green)" : score >= 50 ? "var(--yellow)" : "var(--red)";
+  const color =
+    score >= 75 ? "var(--green)" : score >= 50 ? "var(--yellow)" : "var(--red)";
   return (
     <svg width={size} height={size} viewBox="0 0 100 100">
       <circle cx="50" cy="50" r={r} fill="none" stroke="var(--border)" strokeWidth="8" />
@@ -107,9 +119,11 @@ function ScoreRing({ score, size = 100 }) {
   );
 }
 
-function qualityScore(pct) { return Math.min(1, Math.max(0, pct / 100)); }
+function qualityScore(pct) {
+  return Math.min(1, Math.max(0, pct / 100));
+}
 
-// ── Section Breakdown ───────────────────────────────────────────────────────
+// ── Section Breakdown ──────────────────────────────────────────────────────────
 function SectionBreakdown({ sections, jobType }) {
   const weights = getSectionWeights(jobType);
   return (
@@ -163,7 +177,7 @@ function SectionBreakdown({ sections, jobType }) {
   );
 }
 
-// ── Divider ─────────────────────────────────────────────────────────────────
+// ── Divider ────────────────────────────────────────────────────────────────────
 function Divider({ label }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0 16px" }}>
@@ -177,7 +191,7 @@ function Divider({ label }) {
   );
 }
 
-// ── Keyword Tag ──────────────────────────────────────────────────────────────
+// ── Keyword Tag ────────────────────────────────────────────────────────────────
 function Tag({ text, variant }) {
   return (
     <span className={variant === "miss" ? "rm-keyword-miss" : "rm-keyword-hit"}>
@@ -186,20 +200,26 @@ function Tag({ text, variant }) {
   );
 }
 
-// ── History Modal ────────────────────────────────────────────────────────────
-function HistoryModal({ isOpen, onClose, history }) {
+// ── History Modal ──────────────────────────────────────────────────────────────
+function HistoryModal({ isOpen, onClose, history, historyLoading }) {
   if (!isOpen) return null;
   return (
     <>
-      <div className="modal-overlay" onClick={onClose} style={{ alignItems: "center", justifyContent: "center" }} />
-      <div style={{
-        position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-        zIndex: 1000, width: "90%", maxWidth: 660, maxHeight: "85vh",
-        overflowY: "auto",
-      }}
+      <div
+        className="modal-overlay"
+        onClick={onClose}
+        style={{ alignItems: "center", justifyContent: "center" }}
+      />
+      <div
+        style={{
+          position: "fixed", top: "50%", left: "50%",
+          transform: "translate(-50%,-50%)", zIndex: 1000,
+          width: "90%", maxWidth: 600, maxHeight: "85vh", overflowY: "auto",
+        }}
         className="rm-history-modal-bg"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Sticky header */}
         <div className="rm-history-header" style={{ position: "sticky", top: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
@@ -207,62 +227,52 @@ function HistoryModal({ isOpen, onClose, history }) {
                 Analysis History
               </h3>
               <p style={{ margin: "3px 0 0", fontSize: 11, color: "var(--text-muted)" }}>
-                {history.length} saved (last 50)
+                {historyLoading ? "Loading…" : `${history.length} saved (last 50)`}
               </p>
             </div>
             <button onClick={onClose} className="modal-close">✕</button>
           </div>
         </div>
 
-        {history.length === 0 ? (
-          <div className="empty-state"><p>No analyses yet.</p></div>
+        {/* Body */}
+        {historyLoading ? (
+          <div className="empty-state">
+            <p style={{ color: "var(--text-muted)" }}>Loading history…</p>
+          </div>
+        ) : history.length === 0 ? (
+          <div className="empty-state">
+            <p>No analyses yet.</p>
+          </div>
         ) : (
           <div style={{ padding: "14px 18px" }}>
-            {history.map((entry) => {
-              const expYears = entry.experience === "" || entry.experience === null
-                ? null : parseInt(entry.experience);
-              return (
-                <div key={entry.id} className="rm-history-entry">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4, flexWrap: "wrap" }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)" }}>
-                          {entry.role}
-                        </span>
-                        {expYears !== null && (
-                          <span className="badge" style={{ background: "var(--bg-hover)", color: "var(--text-muted)" }}>
-                            {expYears === 0 ? "Fresher" : `${expYears}yr`}
-                          </span>
-                        )}
-                        {entry.resumeVersion && (
-                          <span className="badge badge-applied">{entry.resumeVersion}</span>
-                        )}
-                        {entry.jobType && (
-                          <span className={`badge ${entry.jobType === "internship" ? "badge-applied" : "badge-offer"}`}>
-                            {entry.jobType === "internship" ? "Internship" : "Job"}
-                          </span>
-                        )}
-                      </div>
-                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 6 }}>
+            {history.map((entry) => (
+              <div key={entry.id} className="rm-history-entry">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4, flexWrap: "wrap" }}>
+                      {entry.resumeVersion && (
+                        <span className="badge badge-applied">{entry.resumeVersion}</span>
+                      )}
+                      <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
                         {entry.formattedTime}
-                      </div>
-                      <p style={{ margin: 0, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5, fontStyle: "italic" }}>
-                        "{entry.verdict}"
-                      </p>
+                      </span>
                     </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{
-                        fontSize: 20, fontWeight: 800,
-                        color: entry.matchScore >= 75 ? "var(--green)" : entry.matchScore >= 50 ? "var(--yellow)" : "var(--red)",
-                      }}>
-                        {entry.matchScore}%
-                      </div>
-                      <div style={{ fontSize: 10, color: "var(--text-muted)" }}>match</div>
+                    <p style={{ margin: 0, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5, fontStyle: "italic" }}>
+                      "{entry.verdict}"
+                    </p>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{
+                      fontSize: 20, fontWeight: 800,
+                      color: entry.matchScore >= 75 ? "var(--green)" : entry.matchScore >= 50 ? "var(--yellow)" : "var(--red)",
+                    }}>
+                      {entry.matchScore}%
                     </div>
+                    <div style={{ fontSize: 10, color: "var(--text-muted)" }}>match</div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -270,32 +280,53 @@ function HistoryModal({ isOpen, onClose, history }) {
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────────
+// ── Main Component ─────────────────────────────────────────────────────────────
 export default function ResumeMatcher() {
   const isMobile = useIsMobile();
-  const [resume, setResume] = useState("");
-  const [jobDesc, setJobDesc] = useState("");
-  const [role, setRole] = useState("");
-  const [jobType, setJobType] = useState("job");
-  const [resumeVersion, setResumeVersion] = useState("");
-  const [experience, setExperience] = useState("");
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [remaining, setRemaining] = useState(DAILY_LIMIT);
-  const [history, setHistory] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
 
+  // Form state
+  const [resume, setResume]               = useState("");
+  const [jobDesc, setJobDesc]             = useState("");
+  const [role, setRole]                   = useState("");
+  const [jobType, setJobType]             = useState("job");
+  const [resumeVersion, setResumeVersion] = useState("");
+  const [experience, setExperience]       = useState("");
+
+  // UI state
+  const [result, setResult]                 = useState(null);
+  const [loading, setLoading]               = useState(false);
+  const [error, setError]                   = useState("");
+  const [remaining, setRemaining]           = useState(DAILY_LIMIT);
+  const [usageLoading, setUsageLoading]     = useState(true);
+  const [history, setHistory]               = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [showHistory, setShowHistory]       = useState(false);
+
+  // Load usage from DB on mount
   useEffect(() => {
-    setRemaining(getRemainingUses());
-    setHistory(getHistory());
+    setUsageLoading(true);
+    fetchRemaining()
+      .then(setRemaining)
+      .finally(() => setUsageLoading(false));
   }, []);
 
-  const isLimitReached = remaining <= 0;
-  const expYears = experience === "" ? null : parseInt(experience);
+  // Fetch history lazily when modal opens
+  const handleOpenHistory = useCallback(async () => {
+    setShowHistory(true);
+    setHistoryLoading(true);
+    try {
+      const data = await fetchHistory();
+      setHistory(data);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
+
+  const isLimitReached   = !usageLoading && remaining <= 0;
+  const expYears         = experience === "" ? null : parseInt(experience);
   const isFresherOrUnset = expYears === null || expYears === 0;
-  const currentWeights = getSectionWeights(jobType);
-  const isInternship = jobType === "internship";
+  const currentWeights   = getSectionWeights(jobType);
+  const isInternship     = jobType === "internship";
 
   const handleExperienceChange = (e) => {
     const val = e.target.value;
@@ -306,7 +337,6 @@ export default function ResumeMatcher() {
   };
 
   const analyze = async () => {
-    
     if (!resume.trim() || !jobDesc.trim() || !role.trim()) {
       setError("Resume, job description, and role are required.");
       return;
@@ -315,7 +345,7 @@ export default function ResumeMatcher() {
       setError("Years of experience required. Enter 0 if fresher.");
       return;
     }
-    if (getRemainingUses() <= 0) {
+    if (isLimitReached) {
       setError("Daily limit reached. Resets at midnight IST.");
       return;
     }
@@ -325,16 +355,24 @@ export default function ResumeMatcher() {
     setResult(null);
 
     const positionType = isInternship ? "Internship" : "Full-Time Job";
-    const expContext = expYears === 0
+    const expContext   = expYears === 0
       ? "0 years (Fresher — no work experience)"
       : `${expYears} year${expYears === 1 ? "" : "s"} of professional experience`;
 
-    const sectionWeightsDesc = currentWeights.map((s) => `  - ${s.label}: ${s.points} points`).join("\n");
+    const sectionWeightsDesc = currentWeights
+      .map((s) => `  - ${s.label}: ${s.points} points`)
+      .join("\n");
 
-    const allSectionKeys = ["experience","projects","technicalSkills","certifications","education","summary","achievements"];
-    const sectionScoresTemplate = allSectionKeys.map(
-      (key) => `    "${key}": { "present": <bool>, "qualityScore": <0-100 or null if not scored>, "quality": "strong|weak|missing", "note": "<brief specific note about this section vs JD>" }`
-    ).join(",\n");
+    const allSectionKeys = [
+      "experience", "projects", "technicalSkills", "certifications",
+      "education", "summary", "achievements",
+    ];
+    const sectionScoresTemplate = allSectionKeys
+      .map(
+        (key) =>
+          `    "${key}": { "present": <bool>, "qualityScore": <0-100 or null if not scored>, "quality": "strong|weak|missing", "note": "<brief specific note about this section vs JD>" }`
+      )
+      .join(",\n");
 
     const internshipNote = isInternship
       ? `\n\nIMPORTANT — This is an INTERNSHIP role. Do NOT penalize for missing work experience. Score only the sections listed above.`
@@ -376,9 +414,13 @@ ${sectionScoresTemplate}
 }`;
 
     try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      // 1. Call Groq
+      const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${GROQ_API_KEY}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GROQ_API_KEY}`,
+        },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
           temperature: 0.1,
@@ -390,29 +432,53 @@ ${sectionScoresTemplate}
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData?.error?.message || "API error");
+      if (!groqRes.ok) {
+        const errData = await groqRes.json();
+        throw new Error(errData?.error?.message || "Groq API error");
       }
 
-      const data = await response.json();
-      const text = data.choices?.[0]?.message?.content || "";
-      const clean = text.replace(/```json|```/g, "").trim();
-      const parsed = JSON.parse(clean);
+      const groqData = await groqRes.json();
+      const text     = groqData.choices?.[0]?.message?.content || "";
+      const clean    = text.replace(/```json|```/g, "").trim();
+      const parsed   = JSON.parse(clean);
 
-      saveToHistory({ role, jobType, experience, resumeVersion: resumeVersion || null, ...parsed });
-      incrementUsage();
-      setRemaining(getRemainingUses());
-      setHistory(getHistory());
+      // 2. Save trimmed record to DB
+      await saveToHistoryAPI({
+        resumeVersion: resumeVersion || null,
+        matchScore: parsed.matchScore,
+        verdict: parsed.verdict,
+      });
+
+      // 3. Increment daily usage in DB
+      const newRemaining = await incrementUsageAPI();
+      setRemaining(newRemaining);
+
       setResult({ ...parsed, _jobType: jobType });
     } catch (err) {
-      setError(err.message || "Analysis failed. Please try again.");
+      if (err.message === "Daily limit reached") {
+        setError("Daily limit reached. Resets at midnight IST.");
+        setRemaining(0);
+      } else {
+        setError(err.message || "Analysis failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const expLabel = expYears === null ? "" : expYears === 0 ? "Fresher" : `${expYears}yr${expYears === 1 ? "" : "s"}`;
+  const handleClear = () => {
+    setResume("");
+    setJobDesc("");
+    setRole("");
+    setResumeVersion("");
+    setExperience("");
+    setJobType("job");
+    setResult(null);
+    setError("");
+  };
+
+  const expLabel =
+    expYears === null ? "" : expYears === 0 ? "Fresher" : `${expYears}yr${expYears === 1 ? "" : "s"}`;
 
   return (
     <div>
@@ -426,23 +492,31 @@ ${sectionScoresTemplate}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ textAlign: "right" }}>
-            <div style={{
-              fontSize: 18, fontWeight: 800,
-              color: isLimitReached ? "var(--red)" : remaining === 1 ? "var(--yellow)" : "var(--green)",
-            }}>
-              {remaining}/{DAILY_LIMIT}
-            </div>
-            <div className="stat-label" style={{ textAlign: "right" }}>left today</div>
+            {usageLoading ? (
+              <div style={{ fontSize: 12, color: "var(--text-muted)" }}>Loading…</div>
+            ) : (
+              <>
+                <div style={{
+                  fontSize: 18, fontWeight: 800,
+                  color: isLimitReached ? "var(--red)" : remaining === 1 ? "var(--yellow)" : "var(--green)",
+                }}>
+                  {remaining}/{DAILY_LIMIT}
+                </div>
+                <div className="stat-label" style={{ textAlign: "right" }}>left today</div>
+              </>
+            )}
           </div>
-          <button className="btn-ghost" onClick={() => setShowHistory(true)}>
-            📊 History ({history.length})
+          <button className="btn-ghost" onClick={handleOpenHistory}>
+            📊 History
           </button>
         </div>
       </div>
 
       {/* Weights panel */}
-      <div className={`rm-weights-panel${isInternship ? " rm-weights-panel-intern" : ""}`}
-        style={{ borderColor: isInternship ? "var(--accent-border)" : "var(--border)" }}>
+      <div
+        className={`rm-weights-panel${isInternship ? " rm-weights-panel-intern" : ""}`}
+        style={{ borderColor: isInternship ? "var(--accent-border)" : "var(--border)" }}
+      >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <div className="rm-section-label" style={{ color: isInternship ? "var(--accent)" : "var(--text-muted)", margin: 0 }}>
             Scoring breakdown — {isInternship ? "Internship" : "Full-Time Job"} (100 pts total)
@@ -469,7 +543,7 @@ ${sectionScoresTemplate}
       {isLimitReached && (
         <div className="rm-warn-banner">Daily limit reached — resets at midnight IST.</div>
       )}
-      {remaining === 1 && !isLimitReached && (
+      {!usageLoading && remaining === 1 && !isLimitReached && (
         <div className="rm-caution-banner">Last analysis for today — use it wisely.</div>
       )}
 
@@ -482,11 +556,12 @@ ${sectionScoresTemplate}
       }}>
         {/* Left column */}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {/* Role */}
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label">Target Role</label>
             <input
-              type="text" value={role} disabled={isLimitReached}
+              type="text"
+              value={role}
+              disabled={isLimitReached}
               onChange={(e) => setRole(e.target.value)}
               placeholder="e.g. ML Engineer, Frontend Dev"
               className="form-input"
@@ -494,21 +569,24 @@ ${sectionScoresTemplate}
             />
           </div>
 
-          {/* Experience */}
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label">
               Years of Experience <span style={{ color: "var(--red)" }}>*</span>
             </label>
             <div style={{ position: "relative" }}>
               <input
-                type="text" inputMode="numeric" value={experience}
-                disabled={isLimitReached} onChange={handleExperienceChange}
+                type="text"
+                inputMode="numeric"
+                value={experience}
+                disabled={isLimitReached}
+                onChange={handleExperienceChange}
                 placeholder="0 for fresher"
                 className="form-input"
                 style={{
                   paddingRight: expLabel ? "80px" : "11px",
                   opacity: isLimitReached ? 0.4 : 1,
-                  borderColor: experience === "" ? "var(--border)"
+                  borderColor:
+                    experience === "" ? "var(--border)"
                     : expYears === 0 ? "var(--red)" : "var(--green)",
                 }}
               />
@@ -524,11 +602,12 @@ ${sectionScoresTemplate}
             </div>
           </div>
 
-          {/* Version */}
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label">Resume Version (optional)</label>
             <input
-              type="text" value={resumeVersion} disabled={isLimitReached}
+              type="text"
+              value={resumeVersion}
+              disabled={isLimitReached}
               onChange={(e) => setResumeVersion(e.target.value)}
               placeholder="e.g. v1.2, ML-focused"
               className="form-input"
@@ -536,14 +615,16 @@ ${sectionScoresTemplate}
             />
           </div>
 
-          {/* Job Type */}
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label">Position Type</label>
-            <div className="rm-toggle-type" style={{
-              display: "grid",
-              gridTemplateColumns: isFresherOrUnset ? "1fr 1fr" : "1fr",
-            }}>
-              {[{ value: "job", label: "Full-Time Job" }, { value: "internship", label: "Internship" }]
+            <div
+              className="rm-toggle-type"
+              style={{ display: "grid", gridTemplateColumns: isFresherOrUnset ? "1fr 1fr" : "1fr" }}
+            >
+              {[
+                { value: "job",        label: "Full-Time Job" },
+                { value: "internship", label: "Internship"    },
+              ]
                 .filter(({ value }) => value === "job" || isFresherOrUnset)
                 .map(({ value, label }) => (
                   <button
@@ -568,8 +649,8 @@ ${sectionScoresTemplate}
         {/* Right column */}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[
-            { label: "Resume", value: resume, setter: setResume, placeholder: "Paste your resume text here..." },
-            { label: "Job Description", value: jobDesc, setter: setJobDesc, placeholder: "Paste the job description here..." },
+            { label: "Resume",          value: resume,  setter: setResume,  placeholder: "Paste your resume text here…"    },
+            { label: "Job Description", value: jobDesc, setter: setJobDesc, placeholder: "Paste the job description here…" },
           ].map(({ label, value, setter, placeholder }) => (
             <div key={label}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
@@ -579,7 +660,8 @@ ${sectionScoresTemplate}
                 </span>
               </div>
               <textarea
-                value={value} disabled={isLimitReached}
+                value={value}
+                disabled={isLimitReached}
                 onChange={(e) => setter(e.target.value)}
                 placeholder={placeholder}
                 className="rm-textarea"
@@ -596,9 +678,13 @@ ${sectionScoresTemplate}
       {/* Actions */}
       <div style={{ display: "flex", gap: 10, marginBottom: 32, alignItems: "center" }}>
         <button
-          onClick={analyze} disabled={loading || isLimitReached}
+          onClick={analyze}
+          disabled={loading || isLimitReached || usageLoading}
           className="btn-primary"
-          style={{ opacity: loading || isLimitReached ? 0.5 : 1, cursor: isLimitReached ? "not-allowed" : "pointer" }}
+          style={{
+            opacity: loading || isLimitReached || usageLoading ? 0.5 : 1,
+            cursor: isLimitReached ? "not-allowed" : "pointer",
+          }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -608,12 +694,7 @@ ${sectionScoresTemplate}
           ) : "Analyze Resume"}
         </button>
         {(resume || jobDesc || role || result) && (
-          <button
-            onClick={() => { setResume(""); setJobDesc(""); setRole(""); setResumeVersion(""); setExperience(""); setJobType("job"); setResult(null); setError(""); }}
-            className="btn-ghost"
-          >
-            Clear
-          </button>
+          <button onClick={handleClear} className="btn-ghost">Clear</button>
         )}
       </div>
 
@@ -621,16 +702,21 @@ ${sectionScoresTemplate}
       {result && (
         <div>
           {/* Score + Verdict */}
-          <div className="rm-score-section" style={{
-            display: "flex", gap: isMobile ? 16 : 24,
-            alignItems: "center", flexDirection: isMobile ? "column" : "row",
-          }}>
+          <div
+            className="rm-score-section"
+            style={{
+              display: "flex", gap: isMobile ? 16 : 24,
+              alignItems: "center", flexDirection: isMobile ? "column" : "row",
+            }}
+          >
             <ScoreRing score={result.matchScore} size={isMobile ? 90 : 100} />
             <div style={{ flex: 1 }}>
               <div className="rm-section-label">Verdict</div>
               <p className="rm-verdict-text">{result.verdict}</p>
               <div style={{ display: "flex", gap: 7, marginTop: 8, flexWrap: "wrap" }}>
-                {role && <span style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 600 }}>{role}</span>}
+                {role && (
+                  <span style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 600 }}>{role}</span>
+                )}
                 <span className={`badge ${result._jobType === "internship" ? "badge-applied" : "badge-offer"}`}>
                   {result._jobType === "internship" ? "Internship" : "Job"}
                 </span>
@@ -694,13 +780,17 @@ ${sectionScoresTemplate}
             <div>
               <div className="rm-section-label">Missing</div>
               <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {(result.missingKeywords || []).map((kw, i) => <Tag key={i} text={kw} variant="miss" />)}
+                {(result.missingKeywords || []).map((kw, i) => (
+                  <Tag key={i} text={kw} variant="miss" />
+                ))}
               </div>
             </div>
             <div>
               <div className="rm-section-label">Matched</div>
               <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {(result.matchedKeywords || []).map((kw, i) => <Tag key={i} text={kw} variant="hit" />)}
+                {(result.matchedKeywords || []).map((kw, i) => (
+                  <Tag key={i} text={kw} variant="hit" />
+                ))}
               </div>
             </div>
           </div>
@@ -718,7 +808,13 @@ ${sectionScoresTemplate}
         </div>
       )}
 
-      <HistoryModal isOpen={showHistory} onClose={() => setShowHistory(false)} history={history} />
+      {/* History Modal */}
+      <HistoryModal
+        isOpen={showHistory}
+        onClose={() => setShowHistory(false)}
+        history={history}
+        historyLoading={historyLoading}
+      />
     </div>
   );
 }

@@ -182,7 +182,7 @@ export default function Sidebar() {
         {/* Logo */}
         <div className="sidebar-logo">
           <div className="logo-mark">Leader<span>Lab</span></div>
-          <div className="logo-sub">Job Tracker</div>
+          
         </div>
 
         {/* Nav */}
@@ -208,16 +208,16 @@ export default function Sidebar() {
 
           {/* User row */}
           {isLoaded && user ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "7px 9px",
-              borderRadius: 8, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
+           <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "7px 9px",
+  borderRadius: 8, background: "var(--sidebar-bottom-user-bg)", border: "1px solid var(--sidebar-bottom-user-border)" }}>
               <UserButton afterSignOutUrl="/sign-in" />
               <div style={{ flex: 1, overflow: "hidden" }}>
-                <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "#fff",
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "var(--sidebar-logo-color)",
+  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {user.fullName || user.username || "User"}
                 </p>
-                <p style={{ margin: 0, fontSize: 10, color: "rgba(255,255,255,0.45)",
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <p style={{ margin: 0, fontSize: 10, color: "var(--sidebar-logo-sub)",
+  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {user.emailAddresses[0]?.emailAddress}
                 </p>
               </div>
@@ -236,15 +236,15 @@ export default function Sidebar() {
           {/* Version button */}
           <button suppressHydrationWarning onClick={() => setShowChangelog(true)} style={{
             display: "flex", alignItems: "center", gap: 6,
-            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+            background: "var(--sidebar-version-bg)", border: "1px solid var(--sidebar-version-border)",
             borderRadius: 6, padding: "5px 10px", cursor: "pointer", width: "100%", transition: "all 0.15s",
           }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
           >
-            <span style={{ fontSize: 10, opacity: 0.4 }}>◈</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{currentVersion}</span>
-            <span style={{ marginLeft: "auto", fontSize: 9, color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>What's new →</span>
+            <span style={{ fontSize: 10, color: "var(--sidebar-version-icon)" }}>◈</span>
+<span style={{ fontSize: 11, fontWeight: 600, color: "var(--sidebar-version-text)" }}>{currentVersion}</span>
+<span style={{ marginLeft: "auto", fontSize: 9, color: "var(--sidebar-version-sub)", fontStyle: "italic" }}>What's new →</span>
           </button>
         </div>
       </aside>

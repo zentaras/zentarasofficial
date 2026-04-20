@@ -7,10 +7,12 @@ datasource db {
 }
 
 model User {
-  id           String        @id
-  email        String?       @unique
-  createdAt    DateTime      @default(now()) @map("created_at")
-  applications Application[]
+  id             String           @id
+  email          String?          @unique
+  createdAt      DateTime         @default(now()) @map("created_at")
+  applications   Application[]
+  resumeAnalyses ResumeAnalysis[]
+  resumeUsage    ResumeUsage?
 
   @@map("users")
 }
@@ -43,4 +45,28 @@ model Application {
   @@index([clerkUserId])
   @@index([clerkUserId, status])
   @@map("applications")
+}
+
+model ResumeAnalysis {
+  id            String   @id @default(cuid())
+  clerkUserId   String   @map("clerk_user_id")
+  user          User     @relation(fields: [clerkUserId], references: [id])
+  resumeVersion String?  @map("resume_version")
+  matchScore    Int      @map("match_score")
+  verdict       String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([clerkUserId])
+  @@map("resume_analyses")
+}
+
+model ResumeUsage {
+  id          String   @id @default(cuid())
+  clerkUserId String   @unique @map("clerk_user_id")
+  user        User     @relation(fields: [clerkUserId], references: [id])
+  count       Int      @default(0)
+  date        String
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("resume_usage")
 }
