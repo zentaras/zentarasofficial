@@ -1,10 +1,10 @@
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ApplicationsProvider } from "./context/ApplicationsContext";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = { title: "LeaderLab" };
 
-// Script that runs before React hydrates — prevents white flash on dark mode
 const themeScript = `
   (function() {
     try {
@@ -17,12 +17,17 @@ const themeScript = `
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning> 
+      <html lang="en" suppressHydrationWarning>
         <head>
           <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         </head>
         <body>
-          <ApplicationsProvider>{children}</ApplicationsProvider>
+          <ApplicationsProvider>
+            {children}
+          </ApplicationsProvider>
+
+          {/* ✅ Add here */}
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
