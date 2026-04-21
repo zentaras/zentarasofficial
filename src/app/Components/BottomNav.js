@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
+import ThemeToggle from "./Themetoggle";
 
 const navItems = [
   { id: "dashboard", icon: "⊞", label: "Dashboard" },
@@ -177,10 +178,10 @@ function ChangelogModal({ onClose }) {
         >
           {CHANGELOG.map((release, i) => {
             const regularChanges = release.changes.filter(
-              (c) => c.type !== "upcoming",
+              (c) => c.type !== "upcoming"
             );
             const upcomingChanges = release.changes.filter(
-              (c) => c.type === "upcoming",
+              (c) => c.type === "upcoming"
             );
             return (
               <div key={release.version}>
@@ -443,7 +444,8 @@ export default function BottomNav() {
           <>
             <div className="more-backdrop" onClick={() => setMoreOpen(false)} />
             <div className="more-drawer">
-              {/* ── USER SECTION — top of drawer ── */}
+
+              {/* ── USER SECTION ── */}
               {isLoaded && user ? (
                 <div
                   style={{
@@ -451,7 +453,7 @@ export default function BottomNav() {
                     alignItems: "center",
                     gap: 10,
                     padding: "12px 16px 14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.07)",
+                    borderBottom: "1px solid var(--border)",
                     marginBottom: 4,
                   }}
                 >
@@ -462,7 +464,7 @@ export default function BottomNav() {
                         margin: 0,
                         fontSize: 13,
                         fontWeight: 600,
-                        color: "var(--text-primary, #f1f5f9)",
+                        color: "var(--text-primary)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -474,7 +476,7 @@ export default function BottomNav() {
                       style={{
                         margin: 0,
                         fontSize: 11,
-                        color: "var(--text-muted, #64748b)",
+                        color: "var(--text-muted)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -488,7 +490,7 @@ export default function BottomNav() {
                 <div
                   style={{
                     padding: "12px 16px 14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.07)",
+                    borderBottom: "1px solid var(--border)",
                     marginBottom: 4,
                   }}
                 >
@@ -499,7 +501,7 @@ export default function BottomNav() {
                       display: "flex",
                       alignItems: "center",
                       gap: 8,
-                      color: "var(--accent, #818cf8)",
+                      color: "var(--accent)",
                       fontSize: 13,
                       fontWeight: 600,
                       textDecoration: "none",
@@ -527,7 +529,30 @@ export default function BottomNav() {
                 );
               })}
 
-              {/* Version / changelog button */}
+              {/* ── THEME TOGGLE ROW ── */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 16px",
+                  marginTop: 4,
+                  borderTop: "1px solid var(--border)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  Theme
+                </span>
+                <ThemeToggle />
+              </div>
+
+              {/* ── VERSION / CHANGELOG ── */}
               <button
                 onClick={() => {
                   setMoreOpen(false);
@@ -539,26 +564,26 @@ export default function BottomNav() {
                   gap: 8,
                   width: "100%",
                   padding: "10px 16px",
-                  marginTop: 4,
-                  borderTop: "1px solid rgba(255,255,255,0.07)",
+                  borderTop: "1px solid var(--border)",
                   background: "transparent",
                   border: "none",
+                  borderTop: "1px solid var(--border)",
                   cursor: "pointer",
                   transition: "background 0.15s",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "rgba(129,140,248,0.08)")
+                  (e.currentTarget.style.background = "var(--bg-hover)")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background = "transparent")
                 }
               >
-                <span style={{ fontSize: 12, opacity: 0.45 }}>◈</span>
+                <span style={{ fontSize: 12, color: "var(--sidebar-version-icon)" }}>◈</span>
                 <span
                   style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    color: "var(--accent, #818cf8)",
+                    color: "var(--accent)",
                   }}
                 >
                   {currentVersion}
@@ -567,7 +592,7 @@ export default function BottomNav() {
                   style={{
                     marginLeft: "auto",
                     fontSize: 10,
-                    color: "var(--text-muted, #64748b)",
+                    color: "var(--text-muted)",
                     fontStyle: "italic",
                   }}
                 >
