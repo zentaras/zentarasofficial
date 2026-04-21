@@ -19,39 +19,22 @@ const moreItems = navItems.slice(4);
 const CHANGELOG = [
   {
     version: "v1.2.0",
-    date: "Coming Soon",
-    tag: "next",
+    date: "April 2025",
+    tag: "null",
     changes: [
-      {
-        type: "upcoming",
-        text: "User authentication — sign up & log in to your account securely",
-      },
-      {
-        type: "upcoming",
-        text: "Cloud database sync — your applications backed up and accessible from any device",
-      },
-      {
-        type: "upcoming",
-        text: "No more local storage limits — unlimited applications stored in the cloud",
-      },
+      { type: "new", text: "User authentication — sign up & log in to your account securely" },
+      { type: "new", text: "Cloud database sync — your applications backed up and accessible from any device" },
+      { type: "new", text: "No more local storage limits — unlimited applications stored in the cloud" },
     ],
   },
   {
     version: "v1.1.0",
-    date: "April 2025",
+    date: "March 2025",
     tag: null,
     changes: [
-      { type: "new", text: "Resume tab updated with only 2 limits per day." },
-      { type: "fix", text: "Minor bugs fixed" },
-      {
-        type: "improved",
-        text: "Dashboard cards now show streak and active application count",
-      },
-      { type: "upcoming", text: "Some major features." },
-      {
-        type: "upcoming",
-        text: "Email reminders for follow-ups on stale applications",
-      },
+      { type: "new",      text: "Resume tab updated with only 3 limits per day." },
+      { type: "fix",      text: "Minor bugs fixed" },
+      { type: "improved", text: "Dashboard cards now show streak and active application count" },
     ],
   },
 ];
