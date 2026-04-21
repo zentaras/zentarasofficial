@@ -42,21 +42,21 @@ const CHANGELOG = [
 const TYPE_CONFIG = {
   new: {
     label: "New",
-    color: "var(--green, #4ade80)",
-    bg: "rgba(74,222,128,0.08)",
-    border: "rgba(74,222,128,0.2)",
+    color: "var(--green)",
+    bg: "var(--green-dim)",
+    border: "rgba(34,160,107,0.2)",
   },
   improved: {
     label: "Improved",
-    color: "var(--accent, #818cf8)",
-    bg: "rgba(129,140,248,0.08)",
-    border: "rgba(129,140,248,0.2)",
+    color: "var(--accent)",
+    bg: "var(--accent-dim)",
+    border: "var(--accent-border)",
   },
   fix: {
     label: "Fix",
-    color: "var(--yellow, #facc15)",
-    bg: "rgba(250,204,21,0.08)",
-    border: "rgba(250,204,21,0.2)",
+    color: "var(--yellow)",
+    bg: "var(--yellow-dim)",
+    border: "rgba(226,178,3,0.2)",
   },
   upcoming: {
     label: "Upcoming",
@@ -69,6 +69,7 @@ const TYPE_CONFIG = {
 function ChangelogModal({ onClose }) {
   return (
     <>
+      {/* Backdrop */}
       <div
         onClick={onClose}
         style={{
@@ -80,6 +81,8 @@ function ChangelogModal({ onClose }) {
           animation: "fadeIn 0.18s ease",
         }}
       />
+
+      {/* Modal container */}
       <div
         style={{
           position: "fixed",
@@ -88,25 +91,27 @@ function ChangelogModal({ onClose }) {
           transform: "translate(-50%, -50%)",
           width: "min(520px, 92vw)",
           maxHeight: "80vh",
-          background: "var(--surface, #13141f)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--bg-card)",
+          border: "1px solid var(--border-light)",
           borderRadius: 16,
           display: "flex",
           flexDirection: "column",
           zIndex: 1101,
-          boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.4)",
           animation: "slideUp 0.22s cubic-bezier(0.34,1.56,0.64,1)",
           overflow: "hidden",
         }}
       >
+        {/* Header */}
         <div
           style={{
             padding: "20px 24px 16px",
-            borderBottom: "1px solid rgba(255,255,255,0.07)",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
+            background: "var(--bg-card)",
           }}
         >
           <div>
@@ -114,7 +119,7 @@ function ChangelogModal({ onClose }) {
               style={{
                 fontSize: 16,
                 fontWeight: 800,
-                color: "var(--text-primary, #f1f5f9)",
+                color: "var(--text-primary)",
                 letterSpacing: "-0.3px",
               }}
             >
@@ -123,7 +128,7 @@ function ChangelogModal({ onClose }) {
             <div
               style={{
                 fontSize: 11,
-                color: "var(--text-muted, #64748b)",
+                color: "var(--text-muted)",
                 marginTop: 2,
               }}
             >
@@ -136,20 +141,30 @@ function ChangelogModal({ onClose }) {
               width: 30,
               height: 30,
               borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: "1px solid var(--border)",
               background: "transparent",
-              color: "var(--text-muted, #64748b)",
+              color: "var(--text-muted)",
               fontSize: 16,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              transition: "background 0.15s, color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--bg-hover)";
+              e.currentTarget.style.color = "var(--text-primary)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--text-muted)";
             }}
           >
             ✕
           </button>
         </div>
 
+        {/* Scrollable body */}
         <div
           style={{
             overflowY: "auto",
@@ -157,6 +172,7 @@ function ChangelogModal({ onClose }) {
             display: "flex",
             flexDirection: "column",
             gap: 28,
+            background: "var(--bg-card)",
           }}
         >
           {CHANGELOG.map((release, i) => {
@@ -168,6 +184,7 @@ function ChangelogModal({ onClose }) {
             );
             return (
               <div key={release.version}>
+                {/* Version header row */}
                 <div
                   style={{
                     display: "flex",
@@ -180,7 +197,7 @@ function ChangelogModal({ onClose }) {
                     style={{
                       fontSize: 13,
                       fontWeight: 800,
-                      color: "var(--text-primary, #f1f5f9)",
+                      color: "var(--text-primary)",
                     }}
                   >
                     {release.version}
@@ -206,12 +223,14 @@ function ChangelogModal({ onClose }) {
                     style={{
                       marginLeft: "auto",
                       fontSize: 11,
-                      color: "var(--text-muted, #64748b)",
+                      color: "var(--text-muted)",
                     }}
                   >
                     {release.date}
                   </span>
                 </div>
+
+                {/* Regular changes */}
                 {regularChanges.length > 0 && (
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 8 }}
@@ -227,8 +246,8 @@ function ChangelogModal({ onClose }) {
                             gap: 10,
                             padding: "9px 12px",
                             borderRadius: 8,
-                            background: "rgba(255,255,255,0.03)",
-                            border: "1px solid rgba(255,255,255,0.05)",
+                            background: "var(--bg-hover)",
+                            border: "1px solid var(--border)",
                           }}
                         >
                           <span
@@ -251,7 +270,7 @@ function ChangelogModal({ onClose }) {
                           <span
                             style={{
                               fontSize: 12,
-                              color: "var(--text-secondary, #94a3b8)",
+                              color: "var(--text-secondary)",
                               lineHeight: 1.6,
                             }}
                           >
@@ -262,6 +281,8 @@ function ChangelogModal({ onClose }) {
                     })}
                   </div>
                 )}
+
+                {/* Upcoming changes */}
                 {upcomingChanges.length > 0 && (
                   <div
                     style={{ marginTop: regularChanges.length > 0 ? 16 : 0 }}
@@ -345,7 +366,7 @@ function ChangelogModal({ onClose }) {
                             <span
                               style={{
                                 fontSize: 12,
-                                color: "var(--text-secondary, #94a3b8)",
+                                color: "var(--text-secondary)",
                                 lineHeight: 1.6,
                                 opacity: 0.75,
                                 fontStyle: "italic",
@@ -359,11 +380,13 @@ function ChangelogModal({ onClose }) {
                     </div>
                   </div>
                 )}
+
+                {/* Divider between releases */}
                 {i < CHANGELOG.length - 1 && (
                   <div
                     style={{
                       height: 1,
-                      background: "rgba(255,255,255,0.06)",
+                      background: "var(--border)",
                       marginTop: 24,
                     }}
                   />
@@ -373,6 +396,7 @@ function ChangelogModal({ onClose }) {
           })}
         </div>
       </div>
+
       <style>{`
         @keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
         @keyframes slideUp { from { opacity: 0; transform: translate(-50%, calc(-50% + 16px)) } to { opacity: 1; transform: translate(-50%, -50%) } }
