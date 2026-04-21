@@ -9,7 +9,6 @@ const STATUS_COLORS = {
   Rejected: "#ef4444",
 };
 
-
 function getStreakData(applications) {
   if (!applications.length)
     return { streak: 0, appliedToday: 0, missedYesterday: false };
@@ -52,192 +51,218 @@ function getStreakData(applications) {
   return { streak, appliedToday, missedYesterday };
 }
 
-// function TodaysTasks() {
-//   const [tasks, setTasks] = useState([]);
-//   const [input, setInput] = useState("");
-
-//   const addTask = () => {
-//     const text = input.trim();
-//     if (!text) return;
-//     setTasks((prev) => [
-//       ...prev,
-//       { id: Date.now(), text, done: false },
-//     ]);
-//     setInput("");
-//   };
-
-//   const toggle = (id) =>
-//     setTasks((prev) =>
-//       prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
-//     );
-
-//   const remove = (id) =>
-//     setTasks((prev) => prev.filter((t) => t.id !== id));
-
-//   const done = tasks.filter((t) => t.done).length;
-//   const pct = tasks.length > 0 ? Math.round((done / tasks.length) * 100) : 0;
-
-//   return (
-//     <div className="card" style={{ marginBottom: 20 }}>
-//       <div
-//         style={{
-//           display: "flex",
-//           justifyContent: "space-between",
-//           alignItems: "center",
-//           marginBottom: 14,
-//         }}
-//       >
-//         <div className="card-title" style={{ marginBottom: 0 }}>
-//           Today's Tasks
-//         </div>
-//         {tasks.length > 0 && (
-//           <span
-//             style={{
-//               fontSize: 11,
-//               color: "var(--text-muted)",
-//               background: "var(--bg-page)",
-//               border: "1px solid var(--border)",
-//               borderRadius: 99,
-//               padding: "2px 8px",
-//             }}
-//           >
-//             {tasks.length} task{tasks.length !== 1 ? "s" : ""}
-//           </span>
-//         )}
-//       </div>
-
-//       {/* Input row */}
-//       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-//         <input
-//           type="text"
-//           value={input}
-//           placeholder="Add a task for today…"
-//           maxLength={120}
-//           onChange={(e) => setInput(e.target.value)}
-//           onKeyDown={(e) => e.key === "Enter" && addTask()}
-//           style={{
-//             flex: 1,
-//             padding: "7px 12px",
-//             borderRadius: "var(--radius-sm)",
-//             border: "1px solid var(--border-light)",
-//             background: "var(--bg-page)",
-//             color: "var(--text-primary)",
-//             fontSize: 13,
-//             fontFamily: "'DM Sans', sans-serif",
-//             outline: "none",
-//           }}
-//         />
-//         <button
-//           onClick={addTask}
-//           className="btn-primary"
-//           style={{ padding: "7px 14px", fontSize: 13 }}
-//         >
-//           + Add
-//         </button>
-//       </div>
-
-//       {/* Empty state */}
-//       {tasks.length === 0 && (
-//         <div
-//           style={{
-//             textAlign: "center",
-//             padding: "20px 0 8px",
-//             fontSize: 13,
-//             color: "var(--text-muted)",
-//           }}
-//         >
-//           No tasks yet — add one above to get started.
-//         </div>
-//       )}
-
-//       {/* Task list */}
-//       {tasks.length > 0 && (
-//         <>
-//           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-//             {tasks.map((task) => (
-//               <li
-//                 key={task.id}
-//                 style={{
-//                   display: "flex",
-//                   alignItems: "center",
-//                   gap: 10,
-//                   padding: "8px 0",
-//                   borderBottom: "1px solid var(--border)",
-//                 }}
-//               >
-//                 <input
-//                   type="checkbox"
-//                   checked={task.done}
-//                   onChange={() => toggle(task.id)}
-//                   style={{ width: 15, height: 15, cursor: "pointer", accentColor: "var(--green)" }}
-//                 />
-//                 <span
-//                   onClick={() => toggle(task.id)}
-//                   style={{
-//                     flex: 1,
-//                     fontSize: 13,
-//                     color: task.done ? "var(--text-muted)" : "var(--text-primary)",
-//                     textDecoration: task.done ? "line-through" : "none",
-//                     cursor: "pointer",
-//                     userSelect: "none",
-//                   }}
-//                 >
-//                   {task.text}
-//                 </span>
-//                 <button
-//                   onClick={() => remove(task.id)}
-//                   style={{
-//                     background: "none",
-//                     border: "none",
-//                     color: "var(--text-muted)",
-//                     fontSize: 16,
-//                     cursor: "pointer",
-//                     padding: "0 2px",
-//                     lineHeight: 1,
-//                     opacity: 0.6,
-//                   }}
-//                   title="Remove"
-//                 >
-//                   ×
-//                 </button>
-//               </li>
-//             ))}
-//           </ul>
-
-//           {/* Progress bar */}
-//           <div style={{ marginTop: 12 }}>
-//             <div className="progress-bar-wrap" style={{ height: 4 }}>
-//               <div
-//                 className="progress-bar"
-//                 style={{
-//                   width: `${pct}%`,
-//                   background: pct === 100 ? "var(--green)" : "var(--accent)",
-//                   transition: "width 0.3s ease",
-//                 }}
-//               />
-//             </div>
-//             <div
-//               style={{
-//                 fontSize: 11,
-//                 color: "var(--text-muted)",
-//                 textAlign: "right",
-//                 marginTop: 5,
-//               }}
-//             >
-//               {done} of {tasks.length} done
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// }
-
-
 function fmtResponseDays(d) {
   if (d === null || d === undefined) return "—";
   if (d === 0) return "< 1 day";
   return `${d}d`;
+}
+
+// ── Skeleton primitives ───────────────────────────────────────────────────────
+
+function Skeleton({ width = "100%", height = 14, radius = 6, style = {} }) {
+  return (
+    <div
+      style={{
+        width,
+        height,
+        borderRadius: radius,
+        background: "var(--bg-hover)",
+        position: "relative",
+        overflow: "hidden",
+        flexShrink: 0,
+        ...style,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)",
+          animation: "shimmer 1.6s infinite",
+        }}
+      />
+      <style>{`
+        @keyframes shimmer {
+          0%   { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ── Skeleton screens ──────────────────────────────────────────────────────────
+
+function StreakSkeleton() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        gap: 12,
+        marginBottom: 20,
+      }}
+    >
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="card">
+          <Skeleton width="55%" height={11} style={{ marginBottom: 10 }} />
+          <Skeleton width="40%" height={30} style={{ marginBottom: 10 }} />
+          <Skeleton width="80%" height={11} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TwoColSkeleton() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 16,
+        marginBottom: 20,
+      }}
+    >
+      {[0, 1].map((i) => (
+        <div key={i} className="card">
+          <Skeleton width="50%" height={11} style={{ marginBottom: 16 }} />
+          {[0, 1, 2, 3].map((j) => (
+            <div key={j} style={{ marginBottom: 14 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 6,
+                }}
+              >
+                <Skeleton width="35%" height={11} />
+                <Skeleton width="20%" height={11} />
+              </div>
+              <Skeleton width="100%" height={6} radius={20} />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TimelineSkeleton() {
+  return (
+    <div className="card" style={{ marginBottom: 20 }}>
+      <Skeleton width="40%" height={11} style={{ marginBottom: 18 }} />
+      <div style={{ position: "relative" }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 7,
+            top: 0,
+            bottom: 0,
+            width: 1,
+            background: "var(--border)",
+          }}
+        />
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            style={{ display: "flex", gap: 16, paddingBottom: 16 }}
+          >
+            <div
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: "50%",
+                background: "var(--bg-hover)",
+                flexShrink: 0,
+                marginTop: 2,
+              }}
+            />
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 6,
+                }}
+              >
+                <Skeleton width="30%" height={12} />
+                <Skeleton width="15%" height={10} />
+              </div>
+              <Skeleton width="55%" height={10} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TableSkeleton() {
+  return (
+    <div className="card">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
+        <Skeleton width="35%" height={11} />
+        <Skeleton width={60} height={28} radius={6} />
+      </div>
+      <div
+        className="table-wrapper"
+        style={{ border: "none", overflow: "hidden" }}
+      >
+        {/* Header row */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.5fr 2fr 1fr 1fr 1fr",
+            gap: 12,
+            padding: "10px 14px",
+            borderBottom: "1px solid var(--border)",
+            background: "var(--bg-hover)",
+          }}
+        >
+          {["40%", "55%", "50%", "45%", "35%"].map((w, i) => (
+            <Skeleton key={i} width={w} height={10} />
+          ))}
+        </div>
+        {/* Data rows */}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.5fr 2fr 1fr 1fr 1fr",
+              gap: 12,
+              padding: "13px 14px",
+              borderBottom: i < 4 ? "1px solid var(--border)" : "none",
+            }}
+          >
+            {["60%", "75%", "55%", "45%", "50%"].map((w, j) => (
+              <Skeleton key={j} width={w} height={12} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div>
+      <StreakSkeleton />
+      <TwoColSkeleton />
+      <TimelineSkeleton />
+      <TableSkeleton />
+    </div>
+  );
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -265,7 +290,8 @@ function StreakCard({ applications }) {
         className="card"
         style={{
           borderColor: streak >= 3 ? "rgba(234,179,8,0.3)" : "var(--border)",
-          background: streak >= 3 ? "rgba(234,179,8,0.04)" : "var(--bg-card)",
+          background:
+            streak >= 3 ? "rgba(234,179,8,0.04)" : "var(--bg-card)",
         }}
       >
         <div className="stat-label">Apply Streak</div>
@@ -338,7 +364,7 @@ function StreakCard({ applications }) {
         </div>
       </div>
 
-      {/* Aggressive message */}
+      {/* Status Check */}
       <div
         className="card"
         style={{
@@ -438,7 +464,11 @@ function TimelineList({ events, cardBg }) {
               </span>
             </div>
             <div
-              style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}
+              style={{
+                fontSize: 11,
+                color: "var(--text-muted)",
+                marginTop: 1,
+              }}
             >
               {ev.role} —{" "}
               <span
@@ -484,7 +514,6 @@ function TimelineModal({ events, onClose }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -507,7 +536,11 @@ function TimelineModal({ events, onClose }) {
               Full Activity Timeline
             </div>
             <div
-              style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}
+              style={{
+                fontSize: 11,
+                color: "var(--text-muted)",
+                marginTop: 2,
+              }}
             >
               {events.length} event{events.length !== 1 ? "s" : ""}
             </div>
@@ -537,11 +570,9 @@ function TimelineModal({ events, onClose }) {
               e.currentTarget.style.color = "var(--text-muted)";
             }}
           >
-            x
+            ✕
           </button>
         </div>
-
-        {/* Scrollable body */}
         <div style={{ overflowY: "auto", padding: "18px 22px 22px", flex: 1 }}>
           <TimelineList events={events} cardBg="var(--bg-card)" />
         </div>
@@ -600,9 +631,7 @@ function ActivityTimeline({ applications }) {
             Activity Timeline
           </div>
         </div>
-
         <TimelineList events={preview} cardBg="var(--bg-card)" />
-
         {remaining > 0 && (
           <button
             onClick={() => setModalOpen(true)}
@@ -628,25 +657,29 @@ function ActivityTimeline({ applications }) {
               e.currentTarget.style.color = "var(--text-muted)";
             }}
           >
-            + {remaining} more event{remaining !== 1 ? "s" : ""} — click to view
-            all
+            + {remaining} more event{remaining !== 1 ? "s" : ""} — click to
+            view all
           </button>
         )}
       </div>
-
       {modalOpen && (
-        <TimelineModal events={allEvents} onClose={() => setModalOpen(false)} />
+        <TimelineModal
+          events={allEvents}
+          onClose={() => setModalOpen(false)}
+        />
       )}
     </>
   );
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
+
 export default function Dashboard({
   applications,
   onAddClick,
   onUpdateStatus,
   setActiveTab,
+  isLoading = false,        // ← pass this prop from parent while DB is fetching
 }) {
   const stats = useMemo(() => {
     const total = applications.length;
@@ -654,7 +687,9 @@ export default function Dashboard({
       (a) => a.status === "Interview",
     ).length;
     const offers = applications.filter((a) => a.status === "Offer").length;
-    const rejected = applications.filter((a) => a.status === "Rejected").length;
+    const rejected = applications.filter(
+      (a) => a.status === "Rejected",
+    ).length;
     const applied = applications.filter((a) => a.status === "Applied").length;
     const callbackRate =
       total > 0 ? (((interviews + offers) / total) * 100).toFixed(1) : 0;
@@ -715,12 +750,20 @@ export default function Dashboard({
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
 
+  // ── Loading state ───────────────────────────────────────────────────────────
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
+
+  // ── Empty state ─────────────────────────────────────────────────────────────
   if (applications.length === 0) {
     return (
       <div>
         <div className="empty-state" style={{ paddingTop: 80 }}>
           <h3>No applications yet</h3>
-          <p>Start tracking your job search by adding your first application</p>
+          <p>
+            Start tracking your job search by adding your first application
+          </p>
           <button
             className="btn-primary"
             style={{ margin: "16px auto 0", display: "inline-flex" }}
@@ -733,11 +776,11 @@ export default function Dashboard({
     );
   }
 
+  // ── Loaded state ────────────────────────────────────────────────────────────
   return (
     <div>
-      {/* Streak & daily target */}
       <StreakCard applications={applications} />
-      {/* <TodaysTasks /> */}
+
       <div
         style={{
           display: "grid",
@@ -872,7 +915,6 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Activity timeline */}
       <ActivityTimeline applications={applications} />
 
       {/* Recent Applications */}
