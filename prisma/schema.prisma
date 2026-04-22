@@ -33,7 +33,7 @@ model Application {
   priority         String    @default("Medium")
   recruiterName    String?   @map("recruiter_name")
   recruiterContact String?   @map("recruiter_contact")
-  followUpDate     DateTime? @map("follow_up_date") @db.Date
+  followUpDate     DateTime? @map("follow_up_date") @db.Date  // ← indexed now
   salary           String?
   resumeVersion    String?   @map("resume_version")
   attachmentLink   String?   @map("attachment_link")
@@ -44,6 +44,9 @@ model Application {
 
   @@index([clerkUserId])
   @@index([clerkUserId, status])
+  @@index([clerkUserId, followUpDate])    // ← NEW: "show me due follow-ups"
+  @@index([clerkUserId, dateApplied])     // ← NEW: "apps from last 30 days"
+  @@index([clerkUserId, createdAt])       // ← NEW: dashboard timeline sort
   @@map("applications")
 }
 
@@ -57,6 +60,7 @@ model ResumeAnalysis {
   createdAt     DateTime @default(now()) @map("created_at")
 
   @@index([clerkUserId])
+  @@index([clerkUserId, createdAt])       // ← NEW: "show latest 10 analyses"
   @@map("resume_analyses")
 }
 
@@ -65,7 +69,7 @@ model ResumeUsage {
   clerkUserId String   @unique @map("clerk_user_id")
   user        User     @relation(fields: [clerkUserId], references: [id])
   count       Int      @default(0)
-  date        String
+  date        DateTime @db.Date    // ← CHANGED: String → DateTime for range queries
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("resume_usage")
