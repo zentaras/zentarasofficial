@@ -1,21 +1,111 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model User {
   id        String   @id @default(cuid())
-  clerkId   String   @unique
+  clerkId   String   @unique @map("clerk_id")
   email     String   @unique
-  firstName String?
-  lastName  String?
-  imageUrl  String?
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
+  imageUrl  String?  @map("image_url")
   username  String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  aiResumeScreenerApps   AiResumeScreenerApplicant[]
+  ecommerceAnalyticsApps EcommerceAnalyticsApplicant[]
+  sentimentDashboardApps SentimentDashboardApplicant[]
+
+  @@map("users")
+}
+
+model AiResumeScreenerApplicant {
+  id              String   @id @default(cuid())
+  clerkUserId     String?  @map("clerk_user_id")
+  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String   @map("full_name")
+  email           String
+  phone           String?
+  college         String
+  branch          String
+  graduationYear  String   @map("graduation_year")
+  cgpa            String?
+  linkedinUrl     String?  @map("linkedin_url")
+  githubUrl       String?  @map("github_url")
+  resumeLink      String   @map("resume_link")
+  whyInterested   String   @map("why_interested") @db.Text
+  priorExperience String   @map("prior_experience") @db.Text
+  toolsKnown      String   @map("tools_known")
+  availability    String
+  startDate       String   @map("start_date")
+  status          String   @default("Pending")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([clerkUserId])
+  @@map("ai_resume_screener_applicants")
+}
+
+model EcommerceAnalyticsApplicant {
+  id              String   @id @default(cuid())
+  clerkUserId     String?  @map("clerk_user_id")
+  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String   @map("full_name")
+  email           String
+  phone           String?
+  college         String
+  branch          String
+  graduationYear  String   @map("graduation_year")
+  cgpa            String?
+  linkedinUrl     String?  @map("linkedin_url")
+  githubUrl       String?  @map("github_url")
+  resumeLink      String   @map("resume_link")
+  whyInterested   String   @map("why_interested") @db.Text
+  priorExperience String   @map("prior_experience") @db.Text
+  toolsKnown      String   @map("tools_known")
+  projectLink     String?  @map("project_link")
+  availability    String
+  startDate       String   @map("start_date")
+  status          String   @default("Pending")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([clerkUserId])
+  @@map("ecommerce_analytics_applicants")
+}
+
+model SentimentDashboardApplicant {
+  id              String   @id @default(cuid())
+  clerkUserId     String?  @map("clerk_user_id")
+  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String   @map("full_name")
+  email           String
+  phone           String?
+  college         String
+  branch          String
+  graduationYear  String   @map("graduation_year")
+  cgpa            String?
+  linkedinUrl     String?  @map("linkedin_url")
+  githubUrl       String?  @map("github_url")
+  resumeLink      String   @map("resume_link")
+  whyInterested   String   @map("why_interested") @db.Text
+  priorExperience String   @map("prior_experience") @db.Text
+  toolsKnown      String   @map("tools_known")
+  nlpExperience   String   @map("nlp_experience") @db.Text
+  availability    String
+  startDate       String   @map("start_date")
+  status          String   @default("Pending")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([clerkUserId])
+  @@map("sentiment_dashboard_applicants")
 }
