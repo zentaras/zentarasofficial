@@ -1,33 +1,30 @@
-import "./globals.css";
+// src/app/layout.js
+
 import { ClerkProvider } from "@clerk/nextjs";
-import { ApplicationsProvider } from "./context/ApplicationsContext";
-import { Analytics } from "@vercel/analytics/next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 
-export const metadata = { title: "LeaderLab" };
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-const themeScript = `
-  (function() {
-    try {
-      var t = localStorage.getItem('ll_theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', t);
-    } catch(e) {}
-  })();
-`;
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata = {
+  title: "My App",
+  description: "Next.js + Clerk + Prisma + Neon",
+};
 
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        </head>
-        <body>
-          <ApplicationsProvider>
-            {children}
-          </ApplicationsProvider>
-
-          {/* ✅ Add here */}
-          <Analytics />
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+          {children}
         </body>
       </html>
     </ClerkProvider>
