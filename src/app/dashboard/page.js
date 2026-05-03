@@ -1,7 +1,7 @@
 // src/app/dashboard/page.js
 
 import { currentUser } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
