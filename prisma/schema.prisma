@@ -25,26 +25,29 @@ model User {
 }
 
 model AiResumeScreenerApplicant {
-  id              String   @id @default(cuid())
-  clerkUserId     String?  @map("clerk_user_id")
-  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
-  fullName        String   @map("full_name")
+  id              String    @id @default(cuid())
+  clerkUserId     String?   @map("clerk_user_id")
+  user            User?     @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String    @map("full_name")
   email           String
   phone           String?
   college         String
   branch          String
-  graduationYear  String   @map("graduation_year")
+  graduationYear  String    @map("graduation_year")
   cgpa            String?
-  linkedinUrl     String?  @map("linkedin_url")
-  githubUrl       String?  @map("github_url")
-  resumeLink      String   @map("resume_link")
-  whyInterested   String   @map("why_interested") @db.Text
-  priorExperience String   @map("prior_experience") @db.Text
-  toolsKnown      String   @map("tools_known")
+  linkedinUrl     String?   @map("linkedin_url")
+  githubUrl       String?   @map("github_url")
+  resumeLink      String    @map("resume_link")
+  whyInterested   String    @map("why_interested") @db.Text
+  priorExperience String    @map("prior_experience") @db.Text
+  toolsKnown      String    @map("tools_known")
   availability    String
-  startDate       String   @map("start_date")
-  status          String   @default("Pending")
-  createdAt       DateTime @default(now()) @map("created_at")
+  startDate       String    @map("start_date")
+  status          String    @default("Pending")
+  adminNote       String?   @map("admin_note") @db.Text
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
 
   @@index([email])
   @@index([status])
@@ -53,27 +56,30 @@ model AiResumeScreenerApplicant {
 }
 
 model EcommerceAnalyticsApplicant {
-  id              String   @id @default(cuid())
-  clerkUserId     String?  @map("clerk_user_id")
-  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
-  fullName        String   @map("full_name")
+  id              String    @id @default(cuid())
+  clerkUserId     String?   @map("clerk_user_id")
+  user            User?     @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String    @map("full_name")
   email           String
   phone           String?
   college         String
   branch          String
-  graduationYear  String   @map("graduation_year")
+  graduationYear  String    @map("graduation_year")
   cgpa            String?
-  linkedinUrl     String?  @map("linkedin_url")
-  githubUrl       String?  @map("github_url")
-  resumeLink      String   @map("resume_link")
-  whyInterested   String   @map("why_interested") @db.Text
-  priorExperience String   @map("prior_experience") @db.Text
-  toolsKnown      String   @map("tools_known")
-  projectLink     String?  @map("project_link")
+  linkedinUrl     String?   @map("linkedin_url")
+  githubUrl       String?   @map("github_url")
+  resumeLink      String    @map("resume_link")
+  whyInterested   String    @map("why_interested") @db.Text
+  priorExperience String    @map("prior_experience") @db.Text
+  toolsKnown      String    @map("tools_known")
+  projectLink     String?   @map("project_link")
   availability    String
-  startDate       String   @map("start_date")
-  status          String   @default("Pending")
-  createdAt       DateTime @default(now()) @map("created_at")
+  startDate       String    @map("start_date")
+  status          String    @default("Pending")
+  adminNote       String?   @map("admin_note") @db.Text
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
 
   @@index([email])
   @@index([status])
@@ -82,27 +88,30 @@ model EcommerceAnalyticsApplicant {
 }
 
 model SentimentDashboardApplicant {
-  id              String   @id @default(cuid())
-  clerkUserId     String?  @map("clerk_user_id")
-  user            User?    @relation(fields: [clerkUserId], references: [clerkId])
-  fullName        String   @map("full_name")
+  id              String    @id @default(cuid())
+  clerkUserId     String?   @map("clerk_user_id")
+  user            User?     @relation(fields: [clerkUserId], references: [clerkId])
+  fullName        String    @map("full_name")
   email           String
   phone           String?
   college         String
   branch          String
-  graduationYear  String   @map("graduation_year")
+  graduationYear  String    @map("graduation_year")
   cgpa            String?
-  linkedinUrl     String?  @map("linkedin_url")
-  githubUrl       String?  @map("github_url")
-  resumeLink      String   @map("resume_link")
-  whyInterested   String   @map("why_interested") @db.Text
-  priorExperience String   @map("prior_experience") @db.Text
-  toolsKnown      String   @map("tools_known")
-  nlpExperience   String   @map("nlp_experience") @db.Text
+  linkedinUrl     String?   @map("linkedin_url")
+  githubUrl       String?   @map("github_url")
+  resumeLink      String    @map("resume_link")
+  whyInterested   String    @map("why_interested") @db.Text
+  priorExperience String    @map("prior_experience") @db.Text
+  toolsKnown      String    @map("tools_known")
+  nlpExperience   String    @map("nlp_experience") @db.Text
   availability    String
-  startDate       String   @map("start_date")
-  status          String   @default("Pending")
-  createdAt       DateTime @default(now()) @map("created_at")
+  startDate       String    @map("start_date")
+  status          String    @default("Pending")
+  adminNote       String?   @map("admin_note") @db.Text
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
 
   @@index([email])
   @@index([status])
