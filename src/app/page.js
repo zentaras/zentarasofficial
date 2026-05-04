@@ -97,7 +97,7 @@ const PROJECTS = [
   },
 ];
 
-// ── Dynamic stats from PROJECTS array ────────────────────────────────────
+// ── Dynamic stats from PROJECTS array ──────────────────────────────────
 const TOTAL_PROJECTS = PROJECTS.length;
 const TOTAL_OPENINGS = PROJECTS.reduce((sum, p) => sum + p.openings, 0);
 
