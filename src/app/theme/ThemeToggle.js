@@ -76,7 +76,7 @@ export default function ThemeToggle() {
       </div>
 
       {/* Label */}
-      <span>{theme === "dark" ? "☀️ Light" : "🌙 Dark"}</span>
+      <span>{theme === "dark" ? "Light" : "Dark"}</span>
     </button>
   );
 }

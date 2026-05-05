@@ -20,7 +20,6 @@ model User {
   aiResumeScreenerApps   AiResumeScreenerApplicant[]
   ecommerceAnalyticsApps EcommerceAnalyticsApplicant[]
   sentimentDashboardApps SentimentDashboardApplicant[]
-  internshipTracks       InternshipTrack[]
 
   @@map("users")
 }
@@ -118,59 +117,4 @@ model SentimentDashboardApplicant {
   @@index([status])
   @@index([clerkUserId])
   @@map("sentiment_dashboard_applicants")
-}
-
-// ── Internship Tracking ───────────────────────────────────────────────────────
-
-model InternshipTrack {
-  id          String    @id @default(cuid())
-  clerkUserId String    @map("clerk_user_id")
-  user        User      @relation(fields: [clerkUserId], references: [clerkId])
-
-  projectKey  String    @map("project_key")   // "ai-resume-screener" | "ecommerce-analytics" | "sentiment-dashboard"
-  projectName String    @map("project_name")
-  applicantId String    @map("applicant_id")  // FK to the original applicant row
-
-  currentStep Int       @default(1) @map("current_step")  // 1–5
-  isCompleted Boolean   @default(false) @map("is_completed")
-  completedAt DateTime? @map("completed_at")
-
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  steps       InternshipStep[]
-
-  @@unique([clerkUserId, applicantId])
-  @@index([clerkUserId])
-  @@index([projectKey])
-  @@map("internship_tracks")
-}
-
-model InternshipStep {
-  id         String          @id @default(cuid())
-  trackId    String          @map("track_id")
-  track      InternshipTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
-
-  stepNumber Int     @map("step_number")  // 1 | 2 | 3 | 4 | 5
-  stepTitle  String  @map("step_title")
-
-  // Status: "pending" | "submitted" | "approved" | "rejected"
-  status     String  @default("pending")
-
-  // Flexible JSON payload — each step stores its own fields here
-  data       Json?
-
-  // Admin review
-  adminNote  String?   @map("admin_note") @db.Text
-  reviewedAt DateTime? @map("reviewed_at")
-  reviewedBy String?   @map("reviewed_by")
-
-  submittedAt DateTime? @map("submitted_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  @@unique([trackId, stepNumber])
-  @@index([trackId])
-  @@index([status])
-  @@map("internship_steps")
 }

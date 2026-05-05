@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import ThemeToggle from "./theme/ThemeToggle";
+import Navbar from "./Components/navbar";
+import Footer from "./Components/footer";
 
 const PROJECTS = [
   {
@@ -97,7 +96,6 @@ const PROJECTS = [
   },
 ];
 
-// ── Dynamic stats from PROJECTS array ──────────────────────────────────
 const TOTAL_PROJECTS = PROJECTS.length;
 const TOTAL_OPENINGS = PROJECTS.reduce((sum, p) => sum + p.openings, 0);
 
@@ -115,7 +113,7 @@ function statusChip(status) {
 
 // ── Two-step Apply Modal ──────────────────────────────────────────────────
 function ApplyModal({ project, onClose, onSuccess }) {
-  const [step, setStep] = useState(1); // 1 = requirements, 2 = form
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ project: project.id });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -138,7 +136,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
       if (!res.ok) setError(data.error || "Something went wrong.");
       else { setSuccess(true); onSuccess?.(); }
     } catch {
-      setError("Network error. Please try again.");
+      setError("Please login.");
     } finally {
       setLoading(false);
     }
@@ -158,7 +156,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
       }} onClick={e => e.stopPropagation()}>
 
         {success ? (
-          /* ── Success ── */
           <div style={{ padding: "56px 32px", textAlign: "center" }}>
             <div style={{ fontSize: 52, marginBottom: 16 }}>✅</div>
             <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 10 }}>
@@ -175,7 +172,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
           </div>
 
         ) : step === 1 ? (
-          /* ── Step 1: Requirements ── */
           <>
             <div style={{
               padding: "20px 24px 16px", borderBottom: "1px solid var(--border)",
@@ -205,7 +201,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
             </div>
 
             <div style={{ padding: "20px 24px 24px", overflowY: "auto", flex: 1 }}>
-              {/* Meta chips */}
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
                 {[project.duration, project.mode, project.type, `Deadline: ${project.deadline}`].map(c => (
                   <span key={c} style={{
@@ -214,11 +209,9 @@ function ApplyModal({ project, onClose, onSuccess }) {
                   }}>{c}</span>
                 ))}
               </div>
-
               <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
                 {project.description}
               </p>
-
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px", marginBottom: 20 }}>
                 <div>
                   <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, paddingBottom: 5, borderBottom: "1px solid var(--border)" }}>
@@ -245,8 +238,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
                   </ul>
                 </div>
               </div>
-
-              {/* Stack */}
               <div style={{ marginBottom: 20 }}>
                 <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Tech Stack</p>
                 <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
@@ -259,7 +250,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
                   ))}
                 </div>
               </div>
-
               <div style={{
                 background: "var(--yellow-dim)", border: "1px solid rgba(226,178,3,0.3)",
                 borderRadius: "var(--radius-sm)", padding: "10px 14px",
@@ -267,7 +257,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
               }}>
                 ⚠️ This is an <strong>unpaid, experience-based internship</strong>. You'll receive mentorship and a Letter of Recommendation upon completion.
               </div>
-
               <button onClick={() => setStep(2)} style={{
                 width: "100%", padding: "11px 0",
                 background: "var(--accent)", color: "#fff", border: "none",
@@ -280,7 +269,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
           </>
 
         ) : (
-          /* ── Step 2: Application Form ── */
           <>
             <div style={{
               padding: "16px 24px", borderBottom: "1px solid var(--border)",
@@ -316,14 +304,12 @@ function ApplyModal({ project, onClose, onSuccess }) {
                   fontSize: 13, color: "var(--red)", marginBottom: 16,
                 }}>{error}</div>
               )}
-
               <SectionLabel>Personal Details</SectionLabel>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
                 <FormField label="Full Name *" name="fullName" type="text" placeholder="Arjun Sharma" onChange={handleChange} />
                 <FormField label="Email Address *" name="email" type="email" placeholder="arjun@college.edu" onChange={handleChange} />
               </div>
               <FormField label="Phone (optional)" name="phone" type="tel" placeholder="+91 98765 43210" onChange={handleChange} />
-
               <SectionLabel>Academic Details</SectionLabel>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
                 <FormField label="College / University *" name="college" type="text" placeholder="KIET Group of Institutions" onChange={handleChange} />
@@ -331,27 +317,22 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 <FormField label="Graduation Year *" name="graduationYear" type="text" placeholder="2026" onChange={handleChange} />
                 <FormField label="CGPA / % (optional)" name="cgpa" type="text" placeholder="8.4 / 10" onChange={handleChange} />
               </div>
-
               <SectionLabel>Profiles & Resume</SectionLabel>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
                 <FormField label="LinkedIn (optional)" name="linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." onChange={handleChange} />
                 <FormField label="GitHub (optional)" name="githubUrl" type="url" placeholder="https://github.com/..." onChange={handleChange} />
               </div>
               <FormField label="Resume Link (Drive / Notion) *" name="resumeLink" type="url" placeholder="https://drive.google.com/..." onChange={handleChange} />
-
               <SectionLabel>Technical Background</SectionLabel>
               <FormField label="Tools & Technologies You Know *" name="toolsKnown" type="text" placeholder="Python, pandas, scikit-learn, SQL, Git..." onChange={handleChange} />
-
               {project.extraField === "projectLink" && (
                 <FormField label="Past Data/Analytics Project Link (optional)" name="projectLink" type="url" placeholder="GitHub / Kaggle / Colab link" onChange={handleChange} />
               )}
               {project.extraField === "nlpExperience" && (
                 <FormTextarea label="Describe Your NLP Experience *" name="nlpExperience" placeholder="E.g., built a sentiment classifier using NLTK..." onChange={handleChange} />
               )}
-
               <FormTextarea label="Prior Experience / Projects *" name="priorExperience" placeholder="Describe any relevant projects, coursework, or work experience..." onChange={handleChange} />
               <FormTextarea label="Why do you want to work on this project? *" name="whyInterested" placeholder="Tell us what excites you about this specific project..." onChange={handleChange} />
-
               <SectionLabel>Availability</SectionLabel>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
                 <div className="form-group">
@@ -364,7 +345,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 </div>
                 <FormField label="Earliest Start Date *" name="startDate" type="date" onChange={handleChange} />
               </div>
-
               <button onClick={handleSubmit} disabled={loading} style={{
                 width: "100%", marginTop: 16, padding: "11px 0",
                 background: "var(--accent)", color: "#fff", border: "none",
@@ -382,7 +362,6 @@ function ApplyModal({ project, onClose, onSuccess }) {
   );
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────
 function SectionLabel({ children }) {
   return (
     <p style={{
@@ -411,12 +390,10 @@ function FormTextarea({ label, name, placeholder, onChange }) {
   );
 }
 
-// ── Project Card ──────────────────────────────────────────────────────────
 function ProjectCard({ project, onApply, appStatus }) {
   const tagStyle = tagStyles[project.tagColor];
   const { isSignedIn } = useUser();
 
-  // appStatus = null (not applied) | { status, adminNote }
   const applied = !!appStatus;
   const canReapply = appStatus?.status === "Rejected";
   const chip = appStatus ? statusChip(appStatus.status) : null;
@@ -440,14 +417,11 @@ function ProjectCard({ project, onApply, appStatus }) {
         e.currentTarget.style.boxShadow = "none";
       }}
     >
-      {/* Top accent bar */}
       <div style={{
         position: "absolute", top: 0, left: 0, right: 0, height: 3,
         background: tagStyle.color, opacity: 0.7,
         borderRadius: "var(--radius) var(--radius) 0 0",
       }} />
-
-      {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{
@@ -478,12 +452,9 @@ function ProjectCard({ project, onApply, appStatus }) {
           </div>
         </div>
       </div>
-
       <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 14 }}>
         {project.subtitle}
       </p>
-
-      {/* Meta chips */}
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
         {[project.duration, project.mode, `Deadline: ${project.deadline}`].map(c => (
           <span key={c} style={{
@@ -493,8 +464,6 @@ function ProjectCard({ project, onApply, appStatus }) {
           }}>{c}</span>
         ))}
       </div>
-
-      {/* Stack */}
       <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 16 }}>
         {project.stack.map(s => (
           <span key={s} style={{
@@ -504,8 +473,6 @@ function ProjectCard({ project, onApply, appStatus }) {
           }}>{s}</span>
         ))}
       </div>
-
-      {/* Rejection note */}
       {appStatus?.status === "Rejected" && appStatus?.adminNote && (
         <div style={{
           background: "var(--red-dim)", border: "1px solid rgba(227,73,53,0.25)",
@@ -517,10 +484,7 @@ function ProjectCard({ project, onApply, appStatus }) {
           <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6 }}>{appStatus.adminNote}</p>
         </div>
       )}
-
-      {/* Bottom action area — pushed to bottom */}
       <div style={{ marginTop: "auto" }}>
-        {/* Status badge if applied */}
         {applied && chip && (
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -535,26 +499,20 @@ function ProjectCard({ project, onApply, appStatus }) {
             )}
           </div>
         )}
-
-        {/* Apply button logic */}
         {!isSignedIn ? (
           <button onClick={() => onApply(project)} style={{
             width: "100%", marginTop: applied ? 0 : 0, padding: "9px 0",
             background: "var(--accent)", color: "#fff", border: "none",
             borderRadius: "var(--radius-sm)", fontSize: 13,
             fontWeight: 700, cursor: "pointer", fontFamily: "Syne, sans-serif",
-          }}>
-            Apply Now 
-          </button>
+          }}>Apply Now </button>
         ) : !applied ? (
           <button onClick={() => onApply(project)} style={{
             width: "100%", padding: "9px 0",
             background: "var(--accent)", color: "#fff", border: "none",
             borderRadius: "var(--radius-sm)", fontSize: 13,
             fontWeight: 700, cursor: "pointer", fontFamily: "Syne, sans-serif",
-          }}>
-            Apply Now
-          </button>
+          }}>Apply Now</button>
         ) : canReapply ? (
           <button onClick={() => onApply(project)} style={{
             width: "100%", padding: "9px 0",
@@ -562,16 +520,13 @@ function ProjectCard({ project, onApply, appStatus }) {
             border: "1px solid rgba(227,73,53,0.3)",
             borderRadius: "var(--radius-sm)", fontSize: 13,
             fontWeight: 700, cursor: "pointer", fontFamily: "Syne, sans-serif",
-          }}>
-            Reapply 
-          </button>
-        ) : null /* Pending or Shortlisted — no button */ }
+          }}>Reapply </button>
+        ) : null}
       </div>
     </div>
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────
 export default function HomePage() {
   const [activeProject, setActiveProject] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -580,7 +535,6 @@ export default function HomePage() {
 
   useEffect(() => setMounted(true), []);
 
-  // Fetch user's existing applications
   useEffect(() => {
     if (!isSignedIn) return;
     fetch("/api/my-applications")
@@ -599,48 +553,8 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Nav */}
-      <nav style={{
-        position: "sticky", top: 0, zIndex: 40,
-        background: "var(--sidebar-bg)", borderBottom: "1px solid var(--sidebar-border)",
-        padding: "0 28px", height: 56,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        backdropFilter: "blur(8px)",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{
-            fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 18,
-            color: "var(--sidebar-logo-color)", letterSpacing: "-0.3px",
-          }}>
-            Zen<span style={{ color: "var(--sidebar-logo-accent)" }}>taras</span>
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <ThemeToggle />
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button style={{
-                padding: "6px 16px", borderRadius: "var(--radius-sm)",
-                border: "1px solid var(--border)", background: "transparent",
-                color: "var(--text-primary)", fontSize: 13, fontWeight: 600, cursor: "pointer",
-              }}>Sign In</button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button style={{
-                padding: "6px 16px", borderRadius: "var(--radius-sm)",
-                border: "none", background: "var(--accent)",
-                color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer",
-              }}>Sign Up</button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <Link href="/dashboard" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none", fontWeight: 500 }}>
-              Dashboard
-            </Link>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
-        </div>
-      </nav>
+      {/* ── Shared Navbar (show Dashboard link for signed-in users) ── */}
+      <Navbar showDashboardLink={true} showBackLink={false} />
 
       <main style={{
         maxWidth: 1080, margin: "0 auto",
@@ -662,8 +576,6 @@ export default function HomePage() {
           }}>
             No stipend. No shortcuts. Just hands-on project work alongside our core team — you ship real code, real models, and real dashboards.
           </p>
-
-          {/* ── Dynamic stats ── */}
           <div style={{
             display: "inline-flex", gap: 0, border: "1px solid var(--border)",
             borderRadius: "var(--radius)", overflow: "hidden", background: "var(--bg-card)",
@@ -757,16 +669,10 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: 56, paddingTop: 24, borderTop: "1px solid var(--border)" }}>
-          <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
-            © 2026 Zentaras · Questions?{" "}
-            <a href="mailto:team@zentaras.in" style={{ color: "var(--accent)", textDecoration: "none" }}>team@zentaras.in</a>
-          </p>
-        </div>
+        {/* ── Shared Footer ── */}
+        <Footer />
       </main>
 
-      {/* Apply modal */}
       {activeProject && (
         <ApplyModal
           project={activeProject}

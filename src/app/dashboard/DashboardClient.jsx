@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { UserButton } from "@clerk/nextjs";
+import Navbar from "../Components/navbar";
+import Footer from "../Components/footer";
 
 const PROJECT_DETAILS = {
   "AI Resume Screener": {
@@ -23,18 +24,30 @@ const PROJECT_DETAILS = {
 
 function statusStyle(s) {
   if (s === "Shortlisted") return { bg: "var(--green-dim)", color: "var(--green)" };
-  if (s === "Rejected") return { bg: "var(--red-dim)", color: "var(--red)" };
+  if (s === "Rejected")    return { bg: "var(--red-dim)",   color: "var(--red)" };
   return { bg: "var(--blue-dim)", color: "var(--blue)" };
 }
 
+// ── SSR-safe origin ───────────────────────────────────────────────────────────
+// Next.js SSR-renders "use client" components on the server too, where
+// `window` is undefined. Wrapping in a function means it's only called
+// during actual rendering/events — the typeof guard keeps the server safe.
+const getOrigin = () =>
+  typeof window !== "undefined"
+    ? window.location.origin
+    : "https://zentaras.vercel.app";
+
 export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEmail }) {
-  const [username, setUsername] = useState(dbUser.username ?? "");
+  const [username, setUsername]           = useState(dbUser.username ?? "");
   const [editingUsername, setEditingUsername] = useState(false);
   const [usernameInput, setUsernameInput] = useState(dbUser.username ?? "");
   const [usernameError, setUsernameError] = useState("");
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameSuccess, setUsernameSuccess] = useState(false);
-  const [approvalPopup, setApprovalPopup] = useState(null); // approved app
+  const [approvalPopup, setApprovalPopup] = useState(null);
+
+  // Safe to call during render — getOrigin() defers the window access
+  const publicUrl = (name) => `${getOrigin()}/user/${name}`;
 
   const handleSaveUsername = async () => {
     setUsernameLoading(true);
@@ -55,25 +68,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
-      {/* Navbar */}
-      <nav style={{
-        position: "sticky", top: 0, zIndex: 40,
-        background: "var(--sidebar-bg)", borderBottom: "1px solid var(--sidebar-border)",
-        padding: "0 20px", height: 56,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
-        <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 18, color: "var(--sidebar-logo-color)" }}>
-          Zen<span style={{ color: "var(--sidebar-logo-accent)" }}>taras</span>
-        </span>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>← Projects</a>
-          <UserButton afterSignOutUrl="/" />
-        </div>
-      </nav>
+      <Navbar showBackLink={true} showDashboardLink={false} />
 
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "28px 16px 80px" }}>
 
-        {/* Hero card */}
+        {/* ── Hero card ── */}
         <div style={{
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "22px 24px", marginBottom: 20,
@@ -91,9 +90,9 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             </div>
             <div style={{ display: "flex", gap: 16, flexShrink: 0 }}>
               {[
-                { val: allApps.length, label: "Applied" },
+                { val: allApps.length,                                        label: "Applied" },
                 { val: allApps.filter(a => a.status === "Shortlisted").length, label: "Shortlisted" },
-                { val: allApps.filter(a => a.status === "Pending").length, label: "Pending" },
+                { val: allApps.filter(a => a.status === "Pending").length,     label: "Pending" },
               ].map(s => (
                 <div key={s.label} style={{ textAlign: "center" }}>
                   <div style={{ fontFamily: "Syne, sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{s.val}</div>
@@ -104,7 +103,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
           </div>
         </div>
 
-        {/* Profile card */}
+        {/* ── Profile card ── */}
         <div style={{
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "20px 24px", marginBottom: 20,
@@ -113,11 +112,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             Profile
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "10px 24px", marginBottom: 16 }}>
-            {[
-              ["Full Name", `${dbUser.firstName ?? ""} ${dbUser.lastName ?? ""}`.trim() || "—"],
-              ["Email", dbUser.email],
-              ["Member Since", new Date(dbUser.createdAt).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })],
-            ].map(([label, value]) => (
+            {[["Member Since", new Date(dbUser.createdAt).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })]].map(([label, value]) => (
               <div key={label} style={{ display: "flex", gap: 10 }}>
                 <span style={{ fontSize: 12, color: "var(--text-muted)", width: 90, flexShrink: 0 }}>{label}</span>
                 <span style={{ fontSize: 13, color: "var(--text-primary)", fontWeight: 500 }}>{value}</span>
@@ -125,11 +120,8 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             ))}
           </div>
 
-          {/* Username edit */}
-          <div style={{
-            background: "var(--bg)", border: "1px solid var(--border)",
-            borderRadius: "var(--radius-sm)", padding: "14px 16px",
-          }}>
+          {/* Username */}
+          <div style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", padding: "14px 16px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: editingUsername ? 10 : 0 }}>
               <div>
                 <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 2 }}>Public Username</p>
@@ -139,9 +131,10 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                   </p>
                 )}
                 {username && !editingUsername && (
-                  <p style={{ fontSize: 11, color: "var(--accent)", marginTop: 2 }}>
-                    Zentaras.in/{username}
-                  </p>
+                  <a href={publicUrl(username)} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: 11, color: "var(--accent)", marginTop: 2, display: "inline-block", textDecoration: "none" }}>
+                    {publicUrl(username)}
+                  </a>
                 )}
               </div>
               {!editingUsername && (
@@ -155,6 +148,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 >{username ? "Edit" : "Set Username"}</button>
               )}
             </div>
+
             {editingUsername && (
               <div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -184,17 +178,21 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>3–30 chars, letters/numbers/underscore/hyphen only.</p>
               </div>
             )}
+
             {usernameSuccess && (
-              <p style={{ fontSize: 12, color: "var(--green)", marginTop: 6 }}>✓ Username updated! Share: zentaras.in/{username}</p>
+              <p style={{ fontSize: 12, color: "var(--green)", marginTop: 6 }}>
+                ✓ Username updated! Share:{" "}
+                <a href={publicUrl(username)} target="_blank" rel="noopener noreferrer"
+                  style={{ color: "var(--green)", fontWeight: 700 }}>
+                  {publicUrl(username)}
+                </a>
+              </p>
             )}
           </div>
         </div>
 
-        {/* Applications */}
-        <div style={{
-          background: "var(--bg-card)", border: "1px solid var(--border)",
-          borderRadius: "var(--radius)", padding: "20px 24px",
-        }}>
+        {/* ── Applications ── */}
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "20px 24px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1 }}>
               My Applications
@@ -220,28 +218,45 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                     padding: "14px 16px", background: "var(--bg)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      {/* Icon */}
                       <div style={{
                         width: 38, height: 38, borderRadius: 9, flexShrink: 0,
                         background: `${app.color}18`, border: `1px solid ${app.color}30`,
                         display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17,
                       }}>{app.icon}</div>
+
+                      {/* Name + date + status badge */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{app.projectName}</p>
-                        <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 3 }}>
+                          {app.projectName}
+                        </p>
+                        <p style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 5 }}>
                           Applied {new Date(app.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                         </p>
-                      </div>
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <span
-                          onClick={app.status === "Shortlisted" ? () => setApprovalPopup(app) : undefined}
-                          style={{
-                            fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 20,
-                            background: sc.bg, color: sc.color,
-                            cursor: app.status === "Shortlisted" ? "pointer" : "default",
-                          }}
-                        >
-                          {app.status} {app.status === "Shortlisted" ? "→" : ""}
+                        <span style={{
+                          display: "inline-block", fontSize: 10, fontWeight: 700,
+                          padding: "2px 10px", borderRadius: 20,
+                          background: sc.bg, color: sc.color,
+                        }}>
+                          {app.status}
                         </span>
+                      </div>
+
+                      {/* Actions */}
+                      <div style={{ flexShrink: 0 }}>
+                        {app.status === "Shortlisted" && (
+                          <button
+                            onClick={() => setApprovalPopup(app)}
+                            style={{
+                              fontSize: 11, fontWeight: 700, padding: "5px 13px", borderRadius: 6,
+                              background: "var(--green-dim)", color: "var(--green)",
+                              border: "1px solid rgba(34,160,107,0.35)",
+                              cursor: "pointer", fontFamily: "DM Sans, sans-serif",
+                            }}
+                          >
+                            Show Details →
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -267,9 +282,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             </div>
           )}
         </div>
+
+        <Footer />
       </main>
 
-      {/* Approval Detail Popup */}
+      {/* ── Shortlisted Detail Popup ── */}
       {approvalPopup && (
         <div style={{
           position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)",
@@ -280,6 +297,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             borderRadius: 12, width: "100%", maxWidth: 520, maxHeight: "90vh", overflowY: "auto",
             boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
           }} onClick={e => e.stopPropagation()}>
+
             <div style={{ padding: "22px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -300,9 +318,10 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             <div style={{ padding: "16px 24px 24px" }}>
               <div style={{
                 background: "var(--green-dim)", border: "1px solid rgba(34,160,107,0.3)",
-                borderRadius: "var(--radius-sm)", padding: "10px 14px", marginBottom: 18, fontSize: 12, color: "var(--green)",
+                borderRadius: "var(--radius-sm)", padding: "10px 14px", marginBottom: 18,
+                fontSize: 12, color: "var(--green)",
               }}>
-                🎊 Congratulations! Your application has been shortlisted. Expect an email with next steps within 2–3 business days.
+                🎊 Congratulations! Your application has been shortlisted.
               </div>
 
               {/* Internship details */}
@@ -331,7 +350,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                       ))}
                     </div>
                     <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>What You'll Build</p>
-                    <ul style={{ listStyle: "none", padding: 0 }}>
+                    <ul style={{ listStyle: "none", padding: 0, marginBottom: 0 }}>
                       {d.deliverables.map(dl => (
                         <li key={dl} style={{ fontSize: 12, color: "var(--text-secondary)", padding: "5px 0", borderBottom: "1px solid var(--border)", display: "flex", gap: 6 }}>
                           <span style={{ color: "var(--green)", flexShrink: 0 }}>✓</span> {dl}
@@ -342,19 +361,19 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 );
               })()}
 
-              {/* Their submitted details */}
+              {/* Application details */}
               <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 10px" }}>
                 Your Application Details
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
                 {[
-                  ["Full Name", approvalPopup.fullName],
-                  ["Email", approvalPopup.email],
-                  ["College", approvalPopup.college],
-                  ["Branch", approvalPopup.branch],
-                  ["Graduation", approvalPopup.graduationYear],
+                  ["Full Name",    approvalPopup.fullName],
+                  ["Email",        approvalPopup.email],
+                  ["College",      approvalPopup.college],
+                  ["Branch",       approvalPopup.branch],
+                  ["Graduation",   approvalPopup.graduationYear],
                   ["Availability", approvalPopup.availability],
-                  ["Start Date", approvalPopup.startDate],
+                  ["Start Date",   approvalPopup.startDate],
                 ].map(([l, v]) => (
                   <div key={l} style={{ padding: "5px 0", borderBottom: "1px solid var(--border)" }}>
                     <p style={{ fontSize: 10, color: "var(--text-muted)" }}>{l}</p>
@@ -372,6 +391,22 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                   <p style={{ fontSize: 12, color: "var(--text-secondary)" }}>{approvalPopup.adminNote}</p>
                 </div>
               )}
+
+              {/* ── Go to Internship Tracker button ── */}
+              <a
+                href={`/internship?applicantId=${approvalPopup.id}`}
+                style={{
+                  display: "block", marginTop: 20, padding: "12px 0", textAlign: "center",
+                  background: "var(--accent)", color: "#fff",
+                  borderRadius: "var(--radius-sm)", fontSize: 14, fontWeight: 700,
+                  textDecoration: "none", fontFamily: "Syne, sans-serif",
+                  transition: "opacity 0.15s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+                onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+              >
+                🚀 Go to Internship Tracker →
+              </a>
             </div>
           </div>
         </div>
