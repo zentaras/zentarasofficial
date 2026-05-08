@@ -717,7 +717,7 @@ const PROJECTS = [
       "Final report with benchmark results",
     ],
     openings: 2, deadline: "June 10, 2025", extraField: null,
-    product: "NeuralHire™", productDesc: "Our AI recruitment intelligence platform",
+    product: "NeuralHire", productDesc: "Our AI recruitment intelligence platform",
   },
   {
     id: "ecommerce-analytics",
@@ -1271,17 +1271,7 @@ export default function HomePage() {
           }} />
 
           <div style={{ position: "relative", maxWidth: 760, margin: "0 auto" }}>
-            {/* Label pill */}
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: "var(--accent-dim)", border: "1px solid var(--accent-border)",
-              borderRadius: 20, padding: "6px 16px", marginBottom: 28,
-            }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
-              <span style={{ fontSize: 12, fontWeight: 600, color: "var(--accent)", letterSpacing: "0.5px" }}>
-                AI/ML SaaS Platform · Open Internship Projects
-              </span>
-            </div>
+           
 
             <h1 style={{
               fontFamily: "Syne, sans-serif",
@@ -1335,9 +1325,9 @@ export default function HomePage() {
           <SectionHeading color="var(--accent)" label="Our Products — Where You'll Contribute" />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12, marginBottom: 64 }}>
             {[
-              { name: "NeuralHire™", desc: "AI recruitment intelligence — resume parsing, candidate scoring, and JD matching at scale.", tag: "AI / ML",       icon: "🤖", colorKey: "accent" },
-              { name: "DataPulse™",  desc: "Business intelligence engine — cohort analytics, RFM segmentation, and revenue dashboards.",  tag: "Data Analytics", icon: "📊", colorKey: "green"  },
-              { name: "SentiScope™", desc: "Brand intelligence platform — real-time social listening, sentiment models, and trend alerts.", tag: "NLP / ML",      icon: "🧠", colorKey: "yellow" },
+              { name: "NeuralHire", desc: "AI recruitment intelligence — resume parsing, candidate scoring, and JD matching at scale.", tag: "AI / ML",       icon: "🤖", colorKey: "accent" },
+              { name: "DataPulse",  desc: "Business intelligence engine — cohort analytics, RFM segmentation, and revenue dashboards.",  tag: "Data Analytics", icon: "📊", colorKey: "green"  },
+              { name: "SentiScope", desc: "Brand intelligence platform — real-time social listening, sentiment models, and trend alerts.", tag: "NLP / ML",      icon: "🧠", colorKey: "yellow" },
             ].map(p => {
               const ts = tagStyles[p.colorKey];
               return (
@@ -1367,24 +1357,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Why intern */}
-          <div className="insight-box" style={{ borderRadius: "var(--radius)", padding: "36px 40px", marginBottom: 64 }}>
-            <SectionHeading color="var(--accent)" label="Why Intern With Us" />
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24 }}>
-              {[
-                { icon: "🚀", title: "Ship to Production",  desc: "Your code goes into real products used by real clients. Not a sandbox, not a tutorial." },
-                { icon: "🧑‍💻", title: "Mentored Closely",    desc: "You'll be reviewed by our ML engineers. Code quality and architecture matter here." },
-                { icon: "📁", title: "Portfolio-Grade Work", desc: "Walk away with a GitHub PR history, a case study, and an LOR for your resume." },
-                { icon: "🌐", title: "Fully Remote",         desc: "Async-first culture. Work from anywhere, stay connected via Notion + Slack." },
-              ].map(item => (
-                <div key={item.title}>
-                  <div style={{ fontSize: 24, marginBottom: 10 }}>{item.icon}</div>
-                  <h4 style={{ fontFamily: "Syne, sans-serif", fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 6 }}>{item.title}</h4>
-                  <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.65 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+     
 
           {/* Process */}
           <SectionHeading color="var(--yellow)" label="Process" />
@@ -1409,7 +1382,7 @@ export default function HomePage() {
           </div>
 
           {/* FAQ */}
-          <div style={{ maxWidth: 680, margin: "0 auto 64px" }}>
+          <div style={{ margin: "0 auto 64px" }}>
             <SectionHeading color="var(--border-light)" label="FAQ" />
             {[
               { q: "Is there a stipend?",                a: "No. These are fully unpaid internships. You'll receive a Letter of Recommendation, portfolio-ready deliverables, and real product experience to show employers." },

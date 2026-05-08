@@ -24,13 +24,7 @@ export default function Footer() {
           {/* Brand */}
           <div style={{ maxWidth: 240, flexShrink: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 10 }}>
-              <div style={{
-                width: 26, height: 26, borderRadius: 6,
-                background: "linear-gradient(135deg, var(--accent), var(--sidebar-logo-accent))",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 12, fontWeight: 800, color: "#fff",
-                fontFamily: "Syne, sans-serif", flexShrink: 0,
-              }}>Z</div>
+            
               <span style={{
                 fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 15,
                 color: "var(--sidebar-logo-color)", letterSpacing: "-0.2px",
@@ -50,22 +44,22 @@ export default function Footer() {
           {/* Link columns */}
           <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
             {[
-              {
-                heading: "Products",
-                links: [
-                  { label: "NeuralHire™", href: "#" },
-                  { label: "DataPulse™",  href: "#" },
-                  { label: "SentiScope™", href: "#" },
-                ],
-              },
-              {
-                heading: "Internships",
-                links: [
-                  { label: "Open Projects", href: "#projects" },
-                  { label: "How It Works",  href: "#process"  },
-                  { label: "FAQ",           href: "#faq"      },
-                ],
-              },
+              // {
+              //   heading: "Products",
+              //   links: [
+              //     { label: "NeuralHire", href: "#" },
+              //     { label: "DataPulse",  href: "#" },
+              //     { label: "SentiScope", href: "#" },
+              //   ],
+              // },
+              // {
+              //   heading: "Internships",
+              //   links: [
+              //     { label: "Open Projects", href: "#projects" },
+              //     { label: "How It Works",  href: "#process"  },
+              //     { label: "FAQ",           href: "#faq"      },
+              //   ],
+              // },
               {
                 heading: "Company",
                 links: [
@@ -108,7 +102,7 @@ export default function Footer() {
           paddingTop: 20,
         }}>
           <p style={{ fontSize: 12, color: "var(--sidebar-logo-sub)", transition: "color 0.25s" }}>
-            © 2026 Zentaras Technologies Pvt. Ltd. · All rights reserved.
+            © 2026 Zentaras. All rights reserved.
           </p>
 
        
