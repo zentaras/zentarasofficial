@@ -127,13 +127,22 @@ model InternshipTrack {
   clerkUserId String    @map("clerk_user_id")
   user        User      @relation(fields: [clerkUserId], references: [clerkId])
 
-  projectKey  String    @map("project_key")   // "ai-resume-screener" | "ecommerce-analytics" | "sentiment-dashboard"
+  projectKey  String    @map("project_key")
   projectName String    @map("project_name")
-  applicantId String    @map("applicant_id")  // FK to the original applicant row
+  applicantId String    @map("applicant_id")
 
-  currentStep Int       @default(1) @map("current_step")  // 1–5
+  currentStep Int       @default(1) @map("current_step")
   isCompleted Boolean   @default(false) @map("is_completed")
   completedAt DateTime? @map("completed_at")
+
+  // ── Admin evaluation fields (filled when completing Step 5) ──────────────
+  // Rating: "Excellent" | "Good" | "Average" | "Needs Improvement"
+  performanceRating  String?  @map("performance_rating")
+  overallFeedback    String?  @map("overall_feedback") @db.Text
+  certificateLink    String?  @map("certificate_link")
+  lorLink            String?  @map("lor_link")           // Letter of Recommendation
+  projectRepoLink    String?  @map("project_repo_link")  // Final project repo shared by admin
+  evaluationNotes    String?  @map("evaluation_notes") @db.Text // Internal admin notes (not shown to candidate)
 
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
@@ -151,20 +160,19 @@ model InternshipStep {
   trackId    String          @map("track_id")
   track      InternshipTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
-  stepNumber Int     @map("step_number")  // 1 | 2 | 3 | 4 | 5
+  stepNumber Int     @map("step_number")
   stepTitle  String  @map("step_title")
 
-  // Status: "pending" | "submitted" | "approved" | "rejected"
+  // "pending" | "submitted" | "approved" | "rejected"
   status     String  @default("pending")
 
-  // Flexible JSON payload — each step stores its own fields here
   data       Json?
 
-  // Admin review
   adminNote  String?   @map("admin_note") @db.Text
   reviewedAt DateTime? @map("reviewed_at")
   reviewedBy String?   @map("reviewed_by")
 
+  deadline    DateTime? @map("deadline")
   submittedAt DateTime? @map("submitted_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")

@@ -179,28 +179,21 @@ export const INTERNSHIP_STEPS = [
   {
     number: 5,
     title: "Certificate & Completion",
-    description: "Final review by admin. Once approved, you'll receive your completion certificate.",
+    description: "Admin evaluation & certificate issuance. Your performance feedback and certificate link will appear here once admin completes the review.",
+    // Step 5 is fully admin-controlled:
+    // Admin fills: performanceRating, overallFeedback, certificateLink, lorLink, projectRepoLink
+    // Candidate sees it all read-only once admin publishes it.
+    // Candidate fills: linkedinPostLink, testimonial (optional, after certificate is issued)
+    isAdminControlled: true,
+    isStep5: true, // special flag to render differently
     fields: [
-      {
-        key: "linkedinPostLink",
-        label: "LinkedIn Post Link (optional)",
-        type: "url",
-        placeholder: "Share your internship completion post on LinkedIn",
-        required: false,
-      },
-      {
-        key: "testimonial",
-        label: "Testimonial / Experience",
-        type: "textarea",
-        placeholder: "Write a short testimonial about your experience (may be featured on our website)...",
-        required: false,
-        maxLength: 500,
-      },
+      // These are filled by the CANDIDATE after they receive the certificate
+      { key: "linkedinPostLink", label: "LinkedIn Post Link (optional)", type: "url", placeholder: "Share your internship completion post on LinkedIn", required: false },
+      { key: "testimonial", label: "Your Testimonial (optional)", type: "textarea", placeholder: "Write a short testimonial about your experience (may be featured on our website)...", required: false, maxLength: 500 },
     ],
-    isAdminControlled: true, // Admin unlocks this step by approving step 4
   },
 ];
-
+ 
 export const STEP_STATUS_COLORS = {
   pending:   { bg: "var(--bg)",        color: "var(--text-muted)",    border: "var(--border)" },
   submitted: { bg: "var(--blue-dim)",  color: "var(--blue)",          border: "rgba(99,102,241,0.3)" },
