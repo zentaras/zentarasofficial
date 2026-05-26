@@ -25,7 +25,7 @@ export default function Navbar({ showDashboardLink = false }) {
 
         <div>
           <div style={{
-            fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 16,
+            fontFamily: "sans-serif", fontWeight: 800, fontSize: 16,
             color: "var(--sidebar-logo-color)", letterSpacing: "-0.3px",
             lineHeight: 1.1, transition: "color 0.25s",
           }}>

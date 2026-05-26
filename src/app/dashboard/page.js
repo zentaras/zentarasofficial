@@ -11,7 +11,6 @@ export default async function DashboardPage() {
     (e) => e.id === clerkUser.primaryEmailAddressId
   )?.emailAddress;
 
-  // Fetch user, their applications, and their internship progress tracks
   const dbUser = await prisma.user.upsert({
     where: { clerkId: clerkUser.id },
     update: {},
@@ -24,40 +23,30 @@ export default async function DashboardPage() {
       username: clerkUser.username ?? null,
     },
     include: {
-      aiResumeScreenerApps: { orderBy: { createdAt: "desc" } },
-      ecommerceAnalyticsApps: { orderBy: { createdAt: "desc" } },
-      sentimentDashboardApps: { orderBy: { createdAt: "desc" } },
-      internshipTracks: true, // Crucial: Fetch the progress tracking data
+      dataAnalystApps:  { orderBy: { createdAt: "desc" } },
+      webDevApps:       { orderBy: { createdAt: "desc" } },
+      internshipTracks: true,
     },
   });
 
-  // Map all applications and attach their specific tracking "track" object
   const allApps = [
-    ...dbUser.aiResumeScreenerApps.map(a => ({
+    ...dbUser.dataAnalystApps.map(a => ({
       ...a,
-      projectKey: "ai-resume-screener",
-      projectName: "AI Resume Screener",
-      icon: "🤖",
-      color: "#6366f1",
-    })),
-    ...dbUser.ecommerceAnalyticsApps.map(a => ({
-      ...a,
-      projectKey: "ecommerce-analytics",
-      projectName: "E-Commerce Analytics",
-      icon: "📊",
+      projectKey:  "data-analyst-intern",
+      projectName: "Data Analyst Intern",
+      icon:  "📊",
       color: "#22a06b",
     })),
-    ...dbUser.sentimentDashboardApps.map(a => ({
+    ...dbUser.webDevApps.map(a => ({
       ...a,
-      projectKey: "sentiment-dashboard",
-      projectName: "Sentiment Dashboard",
-      icon: "🧠",
-      color: "#e2b203",
+      projectKey:  "web-dev-intern",
+      projectName: "Web Developer Intern",
+      icon:  "🌐",
+      color: "#6366f1",
     })),
   ].map(app => ({
     ...app,
-    // Attach track info if it exists for this application
-    track: dbUser.internshipTracks.find(t => t.applicationId === app.id) || null
+    track: dbUser.internshipTracks.find(t => t.applicantId === app.id) || null,
   })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
@@ -69,9 +58,9 @@ export default async function DashboardPage() {
       }}
       dbUser={{
         firstName: dbUser.firstName,
-        lastName: dbUser.lastName,
-        email: dbUser.email,
-        username: dbUser.username,
+        lastName:  dbUser.lastName,
+        email:     dbUser.email,
+        username:  dbUser.username,
         createdAt: dbUser.createdAt.toISOString(),
       }}
       allApps={JSON.parse(JSON.stringify(allApps))}

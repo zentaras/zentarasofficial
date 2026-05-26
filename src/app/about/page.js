@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import styles from './about.module.css';
+import Navbar from '../Components/navbar';
+import Footer from '../Components/footer';
 
 // ── Reusable Theme Toggle (same logic as your navbar) ──────────────────────
 function ThemeToggle() {
@@ -110,21 +112,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── Navbar ── */}
-      <nav className={styles.navbar}>
-        <a href="/" className={styles.navLogo}>
-          <span className={styles.logoMark}>
-            Zen<span className={styles.logoAccent}>taras</span>
-          </span>
-        </a>
-        <div className={styles.navRight}>
-          <ThemeToggle />
-          <a href="/dashboard" className="btn-ghost" style={{ textDecoration: 'none', padding: '6px 14px' }}>
-            Dashboard
-          </a>
-          <div className={styles.navAvatar}>R</div>
-        </div>
-      </nav>
-
+      <Navbar/>
       <main className={styles.main}>
 
         {/* ── Hero ── */}
@@ -232,22 +220,7 @@ export default function AboutPage() {
 
       </main>
 
-      {/* ── Footer ── */}
-      <footer className={styles.footer}>
-        <div className={styles.footerLeft}>
-          <span className={styles.logoMark}>
-            Zen<span className={styles.logoAccent}>taras</span>
-          </span>
-          <p className={styles.footerTagline}>
-            AI/ML & Data Science solutions. We build production-grade intelligent systems for real-world problems.
-          </p>
-        </div>
-        <div className={styles.footerRight}>
-          <span className={styles.footerSectionLabel}>Company</span>
-          <a href="/about" className={styles.footerLink}>About</a>
-          <a href="/contact" className={styles.footerLink}>Contact</a>
-        </div>
-      </footer>
+      <Footer/>
      
     </>
   );

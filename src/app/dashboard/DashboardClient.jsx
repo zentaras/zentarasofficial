@@ -5,20 +5,15 @@ import Navbar from "../Components/navbar";
 import Footer from "../Components/footer";
 
 const PROJECT_DETAILS = {
-  "AI Resume Screener": {
-    duration: "3 Months", mode: "Remote", type: "Unpaid · Experience-based",
-    stack: ["Python", "spaCy", "HuggingFace", "FastAPI", "PostgreSQL"],
-    deliverables: ["Resume parser with entity extraction", "Scoring engine using BERT embeddings", "API endpoint + Postman documentation", "Final report with benchmark results"],
+  "Data Analyst Intern": {
+    duration: "6 Weeks", mode: "Remote", type: "Unpaid · Experience-based",
+    stack: ["Python", "Pandas", "SQL", "Plotly", "Power BI"],
+    deliverables: ["Cleaned, analysis-ready dataset with documented steps", "SQL query library (10+ queries)", "Interactive Plotly or Power BI dashboard", "Written insight report with findings"],
   },
-  "E-Commerce Analytics": {
-    duration: "2 Months", mode: "Remote", type: "Unpaid · Experience-based",
-    stack: ["Python", "Pandas", "PostgreSQL", "Plotly Dash", "Power BI"],
-    deliverables: ["Cleaned, normalised PostgreSQL data warehouse", "10+ analytical SQL query library", "Interactive dashboard", "Executive summary PDF"],
-  },
-  "Sentiment Dashboard": {
-    duration: "2.5 Months", mode: "Remote", type: "Unpaid · Experience-based",
-    stack: ["Python", "Transformers", "Streamlit", "Redis", "PostgreSQL"],
-    deliverables: ["Ingestion pipeline", "Fine-tuned sentiment classifier", "Live Streamlit dashboard with topic filters", "Documentation + architecture diagram"],
+  "Web Developer Intern": {
+    duration: "6 Weeks", mode: "Remote", type: "Unpaid · Experience-based",
+    stack: ["Next.js", "React", "Tailwind CSS", "PostgreSQL", "Prisma"],
+    deliverables: ["Feature branch with clean, reviewed commits", "Merged PR with working feature on production", "Brief technical write-up on implementation decisions", "Any tests or documentation relevant to the feature"],
   },
 };
 
@@ -28,26 +23,14 @@ function statusStyle(s) {
   return { bg: "var(--blue-dim)", color: "var(--blue)" };
 }
 
-// ── SSR-safe origin ───────────────────────────────────────────────────────────
-// Next.js SSR-renders "use client" components on the server too, where
-// `window` is undefined. Wrapping in a function means it's only called
-// during actual rendering/events — the typeof guard keeps the server safe.
-const getOrigin = () =>
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "https://zentaras.vercel.app";
-
 export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEmail }) {
-  const [username, setUsername]           = useState(dbUser.username ?? "");
+  const [username, setUsername]               = useState(dbUser.username ?? "");
   const [editingUsername, setEditingUsername] = useState(false);
-  const [usernameInput, setUsernameInput] = useState(dbUser.username ?? "");
-  const [usernameError, setUsernameError] = useState("");
+  const [usernameInput, setUsernameInput]     = useState(dbUser.username ?? "");
+  const [usernameError, setUsernameError]     = useState("");
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameSuccess, setUsernameSuccess] = useState(false);
-  const [approvalPopup, setApprovalPopup] = useState(null);
-
-  // Safe to call during render — getOrigin() defers the window access
-  const publicUrl = (name) => `${getOrigin()}/user/${name}`;
+  const [approvalPopup, setApprovalPopup]     = useState(null);
 
   const handleSaveUsername = async () => {
     setUsernameLoading(true);
@@ -83,19 +66,19 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 style={{ width: 56, height: 56, borderRadius: "50%", border: "2px solid var(--border)", flexShrink: 0 }} />
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h1 style={{ fontFamily: "Syne, sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-primary)", marginBottom: 2 }}>
+              <h1 style={{ fontFamily: "sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-primary)", marginBottom: 2 }}>
                 Hello, {clerkUser.firstName ?? "there"} 👋
               </h1>
               <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{primaryEmail}</p>
             </div>
             <div style={{ display: "flex", gap: 16, flexShrink: 0 }}>
               {[
-                { val: allApps.length,                                        label: "Applied" },
+                { val: allApps.length,                                         label: "Applied" },
                 { val: allApps.filter(a => a.status === "Shortlisted").length, label: "Shortlisted" },
                 { val: allApps.filter(a => a.status === "Pending").length,     label: "Pending" },
               ].map(s => (
                 <div key={s.label} style={{ textAlign: "center" }}>
-                  <div style={{ fontFamily: "Syne, sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{s.val}</div>
+                  <div style={{ fontFamily: "sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{s.val}</div>
                   <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>{s.label}</div>
                 </div>
               ))}
@@ -108,7 +91,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "20px 24px", marginBottom: 20,
         }}>
-          <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>
+          <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>
             Profile
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "10px 24px", marginBottom: 16 }}>
@@ -131,9 +114,9 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                   </p>
                 )}
                 {username && !editingUsername && (
-                  <a href={publicUrl(username)} target="_blank" rel="noopener noreferrer"
+                  <a href={`/user/${username}`} target="_blank" rel="noopener noreferrer"
                     style={{ fontSize: 11, color: "var(--accent)", marginTop: 2, display: "inline-block", textDecoration: "none" }}>
-                    {publicUrl(username)}
+                    /user/{username}
                   </a>
                 )}
               </div>
@@ -182,9 +165,9 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             {usernameSuccess && (
               <p style={{ fontSize: 12, color: "var(--green)", marginTop: 6 }}>
                 ✓ Username updated! Share:{" "}
-                <a href={publicUrl(username)} target="_blank" rel="noopener noreferrer"
+                <a href={`/user/${username}`} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--green)", fontWeight: 700 }}>
-                  {publicUrl(username)}
+                  /user/{username}
                 </a>
               </p>
             )}
@@ -194,7 +177,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
         {/* ── Applications ── */}
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "20px 24px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-            <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1 }}>
+            <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1 }}>
               My Applications
             </p>
             <a href="/" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
@@ -218,14 +201,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                     padding: "14px 16px", background: "var(--bg)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      {/* Icon */}
                       <div style={{
                         width: 38, height: 38, borderRadius: 9, flexShrink: 0,
                         background: `${app.color}18`, border: `1px solid ${app.color}30`,
                         display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17,
                       }}>{app.icon}</div>
-
-                      {/* Name + date + status badge */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 3 }}>
                           {app.projectName}
@@ -241,8 +221,6 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                           {app.status}
                         </span>
                       </div>
-
-                      {/* Actions */}
                       <div style={{ flexShrink: 0 }}>
                         {app.status === "Shortlisted" && (
                           <button
@@ -260,7 +238,6 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                       </div>
                     </div>
 
-                    {/* Rejection note */}
                     {app.status === "Rejected" && app.adminNote && (
                       <div style={{
                         marginTop: 10, background: "var(--red-dim)",
@@ -302,7 +279,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   <span style={{ fontSize: 28 }}>{approvalPopup.icon}</span>
-                  <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>
+                  <h2 style={{ fontFamily: "sans-serif", fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>
                     You're Shortlisted! 🎉
                   </h2>
                 </div>
@@ -324,12 +301,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 🎊 Congratulations! Your application has been shortlisted.
               </div>
 
-              {/* Internship details */}
               {PROJECT_DETAILS[approvalPopup.projectName] && (() => {
                 const d = PROJECT_DETAILS[approvalPopup.projectName];
                 return (
                   <>
-                    <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>
+                    <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>
                       Internship Details
                     </p>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px", marginBottom: 14 }}>
@@ -361,19 +337,17 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 );
               })()}
 
-              {/* Application details */}
-              <p style={{ fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 10px" }}>
+              <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 10px" }}>
                 Your Application Details
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
                 {[
-                  ["Full Name",    approvalPopup.fullName],
-                  ["Email",        approvalPopup.email],
-                  ["College",      approvalPopup.college],
-                  ["Branch",       approvalPopup.branch],
-                  ["Graduation",   approvalPopup.graduationYear],
-                  ["Availability", approvalPopup.availability],
-                  ["Start Date",   approvalPopup.startDate],
+                  ["Full Name",  approvalPopup.fullName],
+                  ["Email",      approvalPopup.email],
+                  ["College",    approvalPopup.college],
+                  ["Branch",     approvalPopup.branch],
+                  ["Graduation", approvalPopup.graduationYear],
+                  ["CGPA",       approvalPopup.cgpa || "—"],
                 ].map(([l, v]) => (
                   <div key={l} style={{ padding: "5px 0", borderBottom: "1px solid var(--border)" }}>
                     <p style={{ fontSize: 10, color: "var(--text-muted)" }}>{l}</p>
@@ -392,14 +366,13 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 </div>
               )}
 
-              {/* ── Go to Internship Tracker button ── */}
               <a
                 href={`/internship?applicantId=${approvalPopup.id}`}
                 style={{
                   display: "block", marginTop: 20, padding: "12px 0", textAlign: "center",
                   background: "var(--accent)", color: "#fff",
                   borderRadius: "var(--radius-sm)", fontSize: 14, fontWeight: 700,
-                  textDecoration: "none", fontFamily: "Syne, sans-serif",
+                  textDecoration: "none", fontFamily: "sans-serif",
                   transition: "opacity 0.15s",
                 }}
                 onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}

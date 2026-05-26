@@ -18,7 +18,7 @@
 .navLogo { text-decoration: none; }
 
 .logoMark {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 16px;
   font-weight: 800;
   color: var(--text-primary);
@@ -44,7 +44,7 @@
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 13px;
   font-weight: 700;
   display: flex;
@@ -86,7 +86,7 @@
 }
 
 .heroTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: clamp(32px, 5vw, 52px);
   font-weight: 800;
   line-height: 1.12;
@@ -131,7 +131,7 @@
 .heroStat:last-child { border-right: none; }
 
 .heroStatVal {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--text-primary);
@@ -183,7 +183,7 @@
 }
 
 .sectionTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: clamp(22px, 3vw, 30px);
   font-weight: 700;
   color: var(--text-primary);
@@ -247,7 +247,7 @@
 .productIcon { font-size: 18px; line-height: 1; }
 
 .productName {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
@@ -299,7 +299,7 @@
 }
 
 .valueTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-primary);
@@ -332,7 +332,7 @@
 }
 
 .timelineYear {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
@@ -377,7 +377,7 @@
 }
 
 .timelineLabel {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
@@ -417,7 +417,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 15px;
   font-weight: 800;
   flex-shrink: 0;
@@ -432,7 +432,7 @@
 }
 
 .teamName {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-primary);
@@ -510,7 +510,7 @@
 }
 
 .ctaTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: sans-serif;
   font-size: clamp(24px, 3.5vw, 36px);
   font-weight: 800;
   color: var(--text-primary);

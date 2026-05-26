@@ -26,7 +26,7 @@ export default function Footer() {
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 10 }}>
             
               <span style={{
-                fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 15,
+                fontFamily: "sans-serif", fontWeight: 800, fontSize: 15,
                 color: "var(--sidebar-logo-color)", letterSpacing: "-0.2px",
                 transition: "color 0.25s",
               }}>
@@ -70,7 +70,7 @@ export default function Footer() {
             ].map(col => (
               <div key={col.heading}>
                 <p style={{
-                  fontFamily: "Syne, sans-serif", fontSize: 10, fontWeight: 700,
+                  fontFamily: "sans-serif", fontSize: 10, fontWeight: 700,
                   color: "var(--sidebar-section-label)", textTransform: "uppercase",
                   letterSpacing: "0.9px", marginBottom: 12,
                   transition: "color 0.25s",

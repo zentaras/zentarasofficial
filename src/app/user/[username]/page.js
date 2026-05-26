@@ -6,18 +6,16 @@ export default async function UserProfilePage({ params }) {
   const user = await prisma.user.findUnique({
     where: { username: username.toLowerCase() },
     include: {
-      aiResumeScreenerApps: { where: { status: "Shortlisted" }, orderBy: { createdAt: "desc" } },
-      ecommerceAnalyticsApps: { where: { status: "Shortlisted" }, orderBy: { createdAt: "desc" } },
-      sentimentDashboardApps: { where: { status: "Shortlisted" }, orderBy: { createdAt: "desc" } },
+      dataAnalystApps: { where: { status: "Shortlisted" }, orderBy: { createdAt: "desc" } },
+      webDevApps:      { where: { status: "Shortlisted" }, orderBy: { createdAt: "desc" } },
     },
   });
 
   if (!user) notFound();
 
   const shortlisted = [
-    ...user.aiResumeScreenerApps.map(a => ({ ...a, projectName: "AI Resume Screener", icon: "🤖" })),
-    ...user.ecommerceAnalyticsApps.map(a => ({ ...a, projectName: "E-Commerce Analytics", icon: "📊" })),
-    ...user.sentimentDashboardApps.map(a => ({ ...a, projectName: "Sentiment Dashboard", icon: "🧠" })),
+    ...user.dataAnalystApps.map(a => ({ ...a, projectName: "Data Analyst Intern", icon: "📊" })),
+    ...user.webDevApps.map(a =>      ({ ...a, projectName: "Web Developer Intern", icon: "🌐" })),
   ];
 
   return (
@@ -31,7 +29,7 @@ export default async function UserProfilePage({ params }) {
             <img src={user.imageUrl} alt="avatar"
               style={{ width: 72, height: 72, borderRadius: "50%", border: "2px solid var(--border)", marginBottom: 16 }} />
           )}
-          <h1 style={{ fontFamily: "Syne, sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
+          <h1 style={{ fontFamily: "sans-serif", fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
             {user.firstName} {user.lastName}
           </h1>
           <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 8 }}>@{user.username}</p>
@@ -40,7 +38,7 @@ export default async function UserProfilePage({ params }) {
 
         {shortlisted.length > 0 && (
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "24px" }}>
-            <p style={{ fontFamily: "Syne, sans-serif", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>
+            <p style={{ fontFamily: "sans-serif", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>
               Shortlisted For
             </p>
             {shortlisted.map(a => (

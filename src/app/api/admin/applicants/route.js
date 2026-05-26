@@ -9,17 +9,15 @@ export async function GET(req) {
     return Response.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const [ai, ecom, sentiment] = await Promise.all([
-    prisma.aiResumeScreenerApplicant.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.ecommerceAnalyticsApplicant.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.sentimentDashboardApplicant.findMany({ orderBy: { createdAt: "desc" } }),
+  const [dataAnalyst, webDev] = await Promise.all([
+    prisma.dataAnalystApplicant.findMany({ orderBy: { createdAt: "desc" } }),
+    prisma.webDevApplicant.findMany({ orderBy: { createdAt: "desc" } }),
   ]);
 
   return Response.json({
     applicants: [
-      ...ai.map(a => ({ ...a, projectKey: "ai-resume-screener", projectName: "AI Resume Screener" })),
-      ...ecom.map(a => ({ ...a, projectKey: "ecommerce-analytics", projectName: "E-Commerce Analytics" })),
-      ...sentiment.map(a => ({ ...a, projectKey: "sentiment-dashboard", projectName: "Sentiment Dashboard" })),
+      ...dataAnalyst.map(a => ({ ...a, projectKey: "data-analyst-intern", projectName: "Data Analyst Intern" })),
+      ...webDev.map(a =>      ({ ...a, projectKey: "web-dev-intern",       projectName: "Web Developer Intern" })),
     ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
   });
 }

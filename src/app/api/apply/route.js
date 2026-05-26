@@ -6,49 +6,38 @@ export async function POST(req) {
   const { userId } = await auth();
 
   const {
-    project, fullName, email, phone,
+    project, fullName, email,
     college, branch, graduationYear, cgpa,
-    linkedinUrl, githubUrl, resumeLink,
-    toolsKnown, whyInterested, priorExperience,
-    availability, startDate, projectLink, nlpExperience,
+    githubUrl, resumeLink,
   } = body;
 
+  // Validate only the fields that actually exist in the form now
   if (!project || !fullName || !email || !college || !branch ||
-      !graduationYear || !resumeLink || !toolsKnown ||
-      !whyInterested || !priorExperience || !availability || !startDate) {
+      !graduationYear || !githubUrl || !resumeLink) {
     return Response.json({ error: "Missing required fields." }, { status: 400 });
   }
 
   const common = {
     clerkUserId: userId ?? null,
-    fullName, email,
-    phone: phone || null,
-    college, branch, graduationYear,
+    fullName,
+    email,
+    college,
+    branch,
+    graduationYear,
     cgpa: cgpa || null,
-    linkedinUrl: linkedinUrl || null,
-    githubUrl: githubUrl || null,
-    resumeLink, toolsKnown,
-    whyInterested, priorExperience,
-    availability, startDate,
+    githubUrl,
+    resumeLink,
   };
 
   try {
-    if (project === "ai-resume-screener") {
-      await prisma.aiResumeScreenerApplicant.create({ data: common });
-    } else if (project === "ecommerce-analytics") {
-      await prisma.ecommerceAnalyticsApplicant.create({
-        data: { ...common, projectLink: projectLink || null },
-      });
-    } else if (project === "sentiment-dashboard") {
-      if (!nlpExperience) {
-        return Response.json({ error: "NLP experience is required." }, { status: 400 });
-      }
-      await prisma.sentimentDashboardApplicant.create({
-        data: { ...common, nlpExperience },
-      });
+    if (project === "data-analyst-intern") {
+      await prisma.dataAnalystApplicant.create({ data: common });
+    } else if (project === "web-dev-intern") {
+      await prisma.webDevApplicant.create({ data: common });
     } else {
       return Response.json({ error: "Invalid project." }, { status: 400 });
     }
+
     return Response.json({ ok: true });
   } catch (err) {
     console.error("Apply error:", err);
