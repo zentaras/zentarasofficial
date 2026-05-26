@@ -86,7 +86,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
           </div>
         </div>
 
-        {/* ── Profile card ── */}
+       
         <div style={{
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "20px 24px", marginBottom: 20,
