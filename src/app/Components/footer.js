@@ -64,7 +64,7 @@ export default function Footer() {
                 heading: "Company",
                 links: [
                   { label: "About",   href: "/about" },
-                  { label: "Contact", href: "mailto:team@zentaras.in" },
+                  { label: "Contact", href: "/contact" },
                 ],
               },
             ].map(col => (

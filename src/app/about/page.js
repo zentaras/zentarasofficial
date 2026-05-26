@@ -100,10 +100,9 @@ const VALUES = [
 ];
 
 const TIMELINE = [
-  { year: '2022', label: 'Founded', desc: 'Started as a 2-person experiment building recruitment AI tools.' },
-  { year: '2023', label: 'First Product', desc: 'NeuralHire launched in private beta. First 50 enterprise customers onboarded.' },
+  { year: '2023', label: 'Founded', desc: 'Started as a 2-person experiment building recruitment AI tools.' },
   { year: '2024', label: 'Suite Expands', desc: 'DataPulse and SentiScope shipped. Team grew to 12 full-time.' },
-  { year: '2025', label: 'Intern Program', desc: 'Launched structured internship tracks. 7 open spots across 3 products.' },
+  { year: '2025', label: 'Intern Program', desc: 'Launched structured internship tracks. 10 open spots across 2 products.' },
   { year: '2026', label: 'Now', desc: 'Building next-gen AI infrastructure. 3 live products, 100% remote.', active: true },
 ];
 
@@ -132,9 +131,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* ── Divider ── */}
-        <div className={styles.divider} />
-
+      
         {/* ── Mission ── */}
         <section className={styles.section}>
           <div className={styles.sectionLabel}>
@@ -156,11 +153,7 @@ export default function AboutPage() {
                 SentiScope — are live, used daily, and continuously improved by a small team
                 that cares obsessively about correctness and reliability.
               </p>
-              <div className={styles.insightBox}>
-                <strong>Why intern here?</strong> Because you'll touch production code in week one.
-                You'll get a Letter of Recommendation, real portfolio work, and the experience of
-                shipping something that actually matters.
-              </div>
+              
             </div>
            
           </div>
@@ -196,28 +189,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <div className={styles.divider} />
-
-       
-
-
-        {/* ── CTA ── */}
-        <section className={styles.cta}>
-          <div className={styles.ctaInner}>
-          
-            <h2 className={styles.ctaTitle}>Ready to ship real AI?</h2>
-            <p className={styles.ctaSub}>
-              Choose a project, apply online, and contribute from week one. We read every application.
-            </p>
-            <div className={styles.ctaActions}>
-              <a href="/" className={`btn-primary ${styles.ctaBtn}`}>
-               View Open Projects
-              </a>
-             
-            </div>
-          </div>
-        </section>
-
+      
       </main>
 
       <Footer/>

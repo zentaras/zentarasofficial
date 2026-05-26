@@ -32,21 +32,19 @@ export default function ThemeToggle() {
         gap: 8,
         padding: "6px 12px",
         borderRadius: "var(--radius-sm, 6px)",
-        border: "1px solid var(--border, rgba(255,255,255,0.1))",
+        border: "none",
         background: "var(--bg-hover, rgba(255,255,255,0.05))",
         color: "var(--text-muted, #888)",
         fontSize: 13,
         fontWeight: 500,
         cursor: "pointer",
-        transition: "border-color 0.15s, background 0.15s",
+        transition: "background 0.15s",
         whiteSpace: "nowrap",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "var(--border-light, rgba(255,255,255,0.2))";
         e.currentTarget.style.background = "var(--bg-card, rgba(255,255,255,0.08))";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "var(--border, rgba(255,255,255,0.1))";
         e.currentTarget.style.background = "var(--bg-hover, rgba(255,255,255,0.05))";
       }}
     >

@@ -29,7 +29,7 @@ const PROJECTS = [
       "Interactive Plotly or Power BI dashboard",
       "Written insight report with findings and recommendations",
     ],
-    openings: 2, deadline: "June 20, 2025",
+    openings: 2, deadline: "June 10, 2026",
     product: "DataPulse", productDesc: "Our internal business intelligence layer",
   },
   {
@@ -55,7 +55,7 @@ const PROJECTS = [
       "Brief technical write-up on implementation decisions",
       "Any tests or documentation relevant to the feature",
     ],
-    openings: 1, deadline: "June 20, 2025",
+    openings: 1, deadline: "June 10, 2026",
     product: "Zentaras", productDesc: "Our live job-tracking and productivity web app",
   },
 ];

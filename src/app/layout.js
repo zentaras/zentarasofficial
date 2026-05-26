@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "My App",
+  title: "Zentaras",
   description: "Next.js + Clerk + Prisma + Neon",
 };
 
