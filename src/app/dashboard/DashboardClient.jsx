@@ -53,6 +53,61 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-primary)" }}>
       <Navbar showBackLink={true} showDashboardLink={false} />
 
+      <style>{`
+        .hero-inner {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .hero-stats {
+          display: flex;
+          gap: 16px;
+          flex-shrink: 0;
+          margin-left: auto;
+        }
+        .username-edit-row {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        .username-edit-row input {
+          flex: 1;
+          min-width: 120px;
+        }
+        .popup-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4px 16px;
+        }
+        @media (max-width: 480px) {
+          .hero-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+          }
+          .hero-stats {
+            margin-left: 0;
+            width: 100%;
+            justify-content: space-between;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+          }
+          .popup-grid {
+            grid-template-columns: 1fr;
+          }
+          .username-edit-row {
+            flex-wrap: wrap;
+          }
+          .username-edit-row input {
+            width: 100%;
+          }
+        }
+      `}</style>
+
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "28px 16px 80px" }}>
 
         {/* ── Hero card ── */}
@@ -60,7 +115,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "22px 24px", marginBottom: 20,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+          <div className="hero-inner">
             {clerkUser.imageUrl && (
               <img src={clerkUser.imageUrl} alt="avatar"
                 style={{ width: 56, height: 56, borderRadius: "50%", border: "2px solid var(--border)", flexShrink: 0 }} />
@@ -69,9 +124,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
               <h1 style={{ fontFamily: "sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-primary)", marginBottom: 2 }}>
                 Hello, {clerkUser.firstName ?? "there"} 👋
               </h1>
-              <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{primaryEmail}</p>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {primaryEmail}
+              </p>
             </div>
-            <div style={{ display: "flex", gap: 16, flexShrink: 0 }}>
+            <div className="hero-stats">
               {[
                 { val: allApps.length,                                         label: "Applied" },
                 { val: allApps.filter(a => a.status === "Shortlisted").length, label: "Shortlisted" },
@@ -86,7 +143,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
           </div>
         </div>
 
-       
+        {/* ── Profile card ── */}
         <div style={{
           background: "var(--bg-card)", border: "1px solid var(--border)",
           borderRadius: "var(--radius)", padding: "20px 24px", marginBottom: 20,
@@ -105,8 +162,8 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
 
           {/* Username */}
           <div style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", padding: "14px 16px" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: editingUsername ? 10 : 0 }}>
-              <div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: editingUsername ? 10 : 0, gap: 8 }}>
+              <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 2 }}>Public Username</p>
                 {!editingUsername && (
                   <p style={{ fontSize: 14, fontWeight: 600, color: username ? "var(--text-primary)" : "var(--text-muted)" }}>
@@ -127,6 +184,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                     padding: "5px 12px", background: "var(--accent-dim)", color: "var(--accent)",
                     border: "1px solid var(--accent-border)", borderRadius: "var(--radius-sm)",
                     fontSize: 12, cursor: "pointer", fontFamily: "DM Sans, sans-serif", fontWeight: 600,
+                    flexShrink: 0,
                   }}
                 >{username ? "Edit" : "Set Username"}</button>
               )}
@@ -134,28 +192,30 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
 
             {editingUsername && (
               <div>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <span style={{ fontSize: 13, color: "var(--text-muted)" }}>@</span>
+                <div className="username-edit-row">
+                  <span style={{ fontSize: 13, color: "var(--text-muted)", flexShrink: 0 }}>@</span>
                   <input
                     value={usernameInput}
                     onChange={e => setUsernameInput(e.target.value)}
                     placeholder="yourname"
                     style={{
-                      flex: 1, background: "var(--bg-card)", border: "1px solid var(--border)",
+                      background: "var(--bg-card)", border: "1px solid var(--border)",
                       borderRadius: "var(--radius-sm)", padding: "7px 10px", color: "var(--text-primary)",
                       fontSize: 13, outline: "none", fontFamily: "DM Sans, sans-serif",
                     }}
                   />
-                  <button onClick={handleSaveUsername} disabled={usernameLoading} style={{
-                    padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none",
-                    borderRadius: "var(--radius-sm)", fontSize: 12, cursor: "pointer", fontWeight: 600,
-                    fontFamily: "DM Sans, sans-serif",
-                  }}>{usernameLoading ? "Saving…" : "Save"}</button>
-                  <button onClick={() => setEditingUsername(false)} style={{
-                    padding: "7px 10px", background: "transparent", color: "var(--text-muted)",
-                    border: "1px solid var(--border)", borderRadius: "var(--radius-sm)",
-                    fontSize: 12, cursor: "pointer",
-                  }}>Cancel</button>
+                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                    <button onClick={handleSaveUsername} disabled={usernameLoading} style={{
+                      padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none",
+                      borderRadius: "var(--radius-sm)", fontSize: 12, cursor: "pointer", fontWeight: 600,
+                      fontFamily: "DM Sans, sans-serif",
+                    }}>{usernameLoading ? "Saving…" : "Save"}</button>
+                    <button onClick={() => setEditingUsername(false)} style={{
+                      padding: "7px 10px", background: "transparent", color: "var(--text-muted)",
+                      border: "1px solid var(--border)", borderRadius: "var(--radius-sm)",
+                      fontSize: 12, cursor: "pointer",
+                    }}>Cancel</button>
+                  </div>
                 </div>
                 {usernameError && <p style={{ fontSize: 11, color: "var(--red)", marginTop: 5 }}>{usernameError}</p>}
                 <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>3–30 chars, letters/numbers/underscore/hyphen only.</p>
@@ -176,11 +236,11 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
 
         {/* ── Applications ── */}
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "20px 24px" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 8 }}>
             <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1 }}>
               My Applications
             </p>
-            <a href="/" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+            <a href="/" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, flexShrink: 0 }}>
               + Apply to a project
             </a>
           </div>
@@ -200,7 +260,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                     border: "1px solid var(--border)", borderRadius: "var(--radius-sm)",
                     padding: "14px 16px", background: "var(--bg)",
                   }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                       <div style={{
                         width: 38, height: 38, borderRadius: 9, flexShrink: 0,
                         background: `${app.color}18`, border: `1px solid ${app.color}30`,
@@ -221,21 +281,19 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                           {app.status}
                         </span>
                       </div>
-                      <div style={{ flexShrink: 0 }}>
-                        {app.status === "Shortlisted" && (
-                          <button
-                            onClick={() => setApprovalPopup(app)}
-                            style={{
-                              fontSize: 11, fontWeight: 700, padding: "5px 13px", borderRadius: 6,
-                              background: "var(--green-dim)", color: "var(--green)",
-                              border: "1px solid rgba(34,160,107,0.35)",
-                              cursor: "pointer", fontFamily: "DM Sans, sans-serif",
-                            }}
-                          >
-                            Show Details →
-                          </button>
-                        )}
-                      </div>
+                      {app.status === "Shortlisted" && (
+                        <button
+                          onClick={() => setApprovalPopup(app)}
+                          style={{
+                            fontSize: 11, fontWeight: 700, padding: "5px 13px", borderRadius: 6,
+                            background: "var(--green-dim)", color: "var(--green)",
+                            border: "1px solid rgba(34,160,107,0.35)",
+                            cursor: "pointer", fontFamily: "DM Sans, sans-serif", flexShrink: 0,
+                          }}
+                        >
+                          Show Details →
+                        </button>
+                      )}
                     </div>
 
                     {app.status === "Rejected" && app.adminNote && (
@@ -267,7 +325,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
       {approvalPopup && (
         <div style={{
           position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)",
-          zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
+          zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
         }} onClick={() => setApprovalPopup(null)}>
           <div style={{
             background: "var(--bg-card)", border: "1px solid var(--border-light)",
@@ -275,9 +333,9 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
           }} onClick={e => e.stopPropagation()}>
 
-            <div style={{ padding: "22px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+            <div style={{ padding: "22px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 28 }}>{approvalPopup.icon}</span>
                   <h2 style={{ fontFamily: "sans-serif", fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>
                     You're Shortlisted! 🎉
@@ -308,7 +366,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                     <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>
                       Internship Details
                     </p>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px", marginBottom: 14 }}>
+                    <div className="popup-grid" style={{ marginBottom: 14 }}>
                       {[["Duration", d.duration], ["Mode", d.mode], ["Type", d.type]].map(([l, v]) => (
                         <div key={l} style={{ padding: "6px 0", borderBottom: "1px solid var(--border)" }}>
                           <p style={{ fontSize: 10, color: "var(--text-muted)" }}>{l}</p>
@@ -340,7 +398,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
               <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 10px" }}>
                 Your Application Details
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
+              <div className="popup-grid">
                 {[
                   ["Full Name",  approvalPopup.fullName],
                   ["Email",      approvalPopup.email],
@@ -351,7 +409,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 ].map(([l, v]) => (
                   <div key={l} style={{ padding: "5px 0", borderBottom: "1px solid var(--border)" }}>
                     <p style={{ fontSize: 10, color: "var(--text-muted)" }}>{l}</p>
-                    <p style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 500 }}>{v}</p>
+                    <p style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 500, wordBreak: "break-word" }}>{v}</p>
                   </div>
                 ))}
               </div>

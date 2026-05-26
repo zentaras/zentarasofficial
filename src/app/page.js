@@ -103,17 +103,19 @@ function ApplyModal({ project, onClose, onSuccess }) {
     <div style={{
       position: "fixed", inset: 0, zIndex: 100,
       background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "12px",                         // FIX: was 16, tighter on mobile
     }} onClick={onClose}>
       <div style={{
         background: "var(--bg-card)", border: "1px solid var(--border-light)",
         borderRadius: 14, width: "100%", maxWidth: 620,
         maxHeight: "93vh", overflow: "hidden", display: "flex", flexDirection: "column",
         boxShadow: "0 32px 80px rgba(0,0,0,0.5)",
+        boxSizing: "border-box",               // FIX: added
       }} onClick={e => e.stopPropagation()}>
 
         {success ? (
-          <div style={{ padding: "60px 32px", textAlign: "center" }}>
+          <div style={{ padding: "60px 24px", textAlign: "center" }}>  {/* FIX: was 32px side padding */}
             <div style={{
               width: 64, height: 64, borderRadius: "50%",
               background: "var(--green-dim)", border: "1px solid rgba(34,160,107,0.3)",
@@ -136,21 +138,22 @@ function ApplyModal({ project, onClose, onSuccess }) {
         ) : step === 1 ? (
           <>
             <div style={{
-              padding: "20px 24px 16px", borderBottom: "1px solid var(--border)",
+              padding: "16px 16px 14px",             // FIX: was 20px 24px — tighter on mobile
+              borderBottom: "1px solid var(--border)",
               display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexShrink: 0,
             }}>
-              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", minWidth: 0, flex: 1 }}>  {/* FIX: minWidth:0, flex:1 */}
                 <div style={{
                   width: 44, height: 44, borderRadius: 10,
                   background: tagStyle.bg, border: `1px solid ${tagStyle.border}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 20, flexShrink: 0,
                 }}>{project.icon}</div>
-                <div>
+                <div style={{ minWidth: 0 }}>  {/* FIX: minWidth:0 prevents text overflow */}
                   <p style={{ fontSize: 10, fontWeight: 700, color: tagStyle.color, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 3 }}>
                     {project.tag} · {project.product}
                   </p>
-                  <h2 style={{ fontFamily: "sans-serif", fontSize: 16, fontWeight: 800, color: "var(--text-primary)" }}>
+                  <h2 style={{ fontFamily: "sans-serif", fontSize: 15, fontWeight: 800, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {project.title}
                   </h2>
                 </div>
@@ -160,13 +163,13 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 borderRadius: 6, width: 28, height: 28, cursor: "pointer",
                 color: "var(--text-muted)", fontSize: 14,
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                marginLeft: 8,                         // FIX: gap from title
               }}>✕</button>
             </div>
 
-            <div style={{ padding: "20px 24px 24px", overflowY: "auto", flex: 1 }}>
-              
+            <div style={{ padding: "16px 16px 20px", overflowY: "auto", flex: 1 }}>  {/* FIX: was 20px 24px 24px */}
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
                 {[project.duration, project.mode, project.type, `Deadline: ${project.deadline}`].map(c => (
                   <span key={c} style={{
                     fontSize: 11, padding: "3px 10px", borderRadius: 4,
@@ -175,16 +178,17 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 ))}
               </div>
 
-              <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: 20 }}>
+              <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: 18 }}>
                 {project.description}
               </p>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px", marginBottom: 20 }}>
+              {/* FIX: single column on mobile, two columns on wider screens */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "16px 20px", marginBottom: 18 }}>
                 <div>
                   <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, paddingBottom: 5, borderBottom: "1px solid var(--border)" }}>
                     What We Need
                   </p>
-                  <ul style={{ listStyle: "none", padding: 0 }}>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                     {project.requirements.map(r => (
                       <li key={r} style={{ fontSize: 12, color: "var(--text-secondary)", padding: "5px 0", borderBottom: "1px solid var(--border)", display: "flex", gap: 6, lineHeight: 1.5 }}>
                         <span style={{ color: tagStyle.color, flexShrink: 0 }}>›</span> {r}
@@ -196,7 +200,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
                   <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, paddingBottom: 5, borderBottom: "1px solid var(--border)" }}>
                     You'll Ship
                   </p>
-                  <ul style={{ listStyle: "none", padding: 0 }}>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                     {project.deliverables.map(d => (
                       <li key={d} style={{ fontSize: 12, color: "var(--text-secondary)", padding: "5px 0", borderBottom: "1px solid var(--border)", display: "flex", gap: 6, lineHeight: 1.5 }}>
                         <span style={{ color: "var(--green)", flexShrink: 0 }}>✓</span> {d}
@@ -206,7 +210,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 </div>
               </div>
 
-              <div style={{ marginBottom: 20 }}>
+              <div style={{ marginBottom: 18 }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Stack</p>
                 <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
                   {project.stack.map(s => (
@@ -218,7 +222,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
               <div style={{
                 background: "var(--yellow-dim)", border: "1px solid rgba(226,178,3,0.3)",
                 borderRadius: 8, padding: "10px 14px", fontSize: 12,
-                color: "var(--yellow)", marginBottom: 20,
+                color: "var(--yellow)", marginBottom: 18,
               }}>
                 ⚠️ Unpaid · Experience-based internship. You'll receive a Letter of Recommendation + portfolio-ready work on completion.
               </div>
@@ -232,17 +236,18 @@ function ApplyModal({ project, onClose, onSuccess }) {
         ) : (
           <>
             <div style={{
-              padding: "16px 24px", borderBottom: "1px solid var(--border)",
+              padding: "14px 16px",               // FIX: was 16px 24px
+              borderBottom: "1px solid var(--border)",
               display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
                 <button onClick={() => setStep(1)} style={{
                   background: "var(--bg-hover)", border: "1px solid var(--border)",
                   borderRadius: 6, width: 28, height: 28, cursor: "pointer",
                   color: "var(--text-muted)", fontSize: 14,
-                  display: "flex", alignItems: "center", justifyContent: "center",
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                 }}>←</button>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <h2 style={{ fontFamily: "sans-serif", fontSize: 15, fontWeight: 800, color: "var(--text-primary)" }}>Your Application</h2>
                   <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>Step 2 of 2 · {project.title}</p>
                 </div>
@@ -251,11 +256,12 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 background: "var(--bg-hover)", border: "1px solid var(--border)",
                 borderRadius: 6, width: 28, height: 28, cursor: "pointer",
                 color: "var(--text-muted)", fontSize: 14,
-                display: "flex", alignItems: "center", justifyContent: "center",
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                marginLeft: 8,
               }}>✕</button>
             </div>
 
-            <div style={{ padding: "18px 24px 24px", overflowY: "auto", flex: 1 }}>
+            <div style={{ padding: "16px 16px 20px", overflowY: "auto", flex: 1 }}>  {/* FIX: was 18px 24px 24px */}
               {error && (
                 <div style={{
                   background: "var(--red-dim)", border: "1px solid rgba(227,73,53,0.25)",
@@ -265,17 +271,18 @@ function ApplyModal({ project, onClose, onSuccess }) {
               )}
 
               <MSectionLabel>Personal Details</MSectionLabel>
-              <div className="form-row">
-                <MField label="Full Name *"     name="fullName" type="text"       onChange={handleChange} />
-                <MField label="Email Address *" name="email"    type="email"  onChange={handleChange} />
+              {/* FIX: single column on mobile */}
+              <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10 }}>
+                <MField label="Full Name *"     name="fullName" type="text"  onChange={handleChange} />
+                <MField label="Email Address *" name="email"    type="email" onChange={handleChange} />
               </div>
 
               <MSectionLabel>Academic Background</MSectionLabel>
-              <div className="form-row">
-                <MField label="College / University *" name="college"        type="text"     onChange={handleChange} />
-                <MField label="Branch / Department *"  name="branch"         type="text"  onChange={handleChange} />
-                <MField label="Graduation Year *"      name="graduationYear" type="text"                          onChange={handleChange} />
-                <MField label="CGPA / % (optional)"    name="cgpa"           type="text"                    onChange={handleChange} />
+              <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10 }}>
+                <MField label="College / University *" name="college"        type="text" onChange={handleChange} />
+                <MField label="Branch / Department *"  name="branch"         type="text" onChange={handleChange} />
+                <MField label="Graduation Year *"      name="graduationYear" type="text" onChange={handleChange} />
+                <MField label="CGPA / % (optional)"    name="cgpa"           type="text" onChange={handleChange} />
               </div>
 
               <MSectionLabel>Profiles &amp; Resume</MSectionLabel>
@@ -318,6 +325,9 @@ function ProjectCard({ project, onApply, appStatus }) {
     <div className="card" style={{
       display: "flex", flexDirection: "column",
       position: "relative", overflow: "hidden",
+      boxSizing: "border-box",                 // FIX: added
+      minWidth: 0,                             // FIX: added — prevents grid blowout
+      width: "100%",                           // FIX: added
       transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s",
     }}
       onMouseEnter={e => {
@@ -347,13 +357,13 @@ function ProjectCard({ project, onApply, appStatus }) {
         </span>
       </div>
 
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12, paddingRight: 80 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12, paddingRight: 72 }}>  {/* FIX: paddingRight 80→72 */}
         <div style={{
           width: 44, height: 44, borderRadius: 10, flexShrink: 0,
           background: tagStyle.bg, border: `1px solid ${tagStyle.border}`,
           display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
         }}>{project.icon}</div>
-        <div>
+        <div style={{ minWidth: 0 }}>  {/* FIX: minWidth:0 so text truncates properly */}
           <span style={{
             display: "inline-block", fontSize: 9, fontWeight: 700,
             letterSpacing: "0.7px", textTransform: "uppercase",
@@ -364,6 +374,7 @@ function ProjectCard({ project, onApply, appStatus }) {
           <h3 style={{
             fontFamily: "sans-serif", fontSize: 15, fontWeight: 700,
             color: "var(--text-primary)", lineHeight: 1.25,
+            wordBreak: "break-word",             // FIX: added
           }}>{project.title}</h3>
         </div>
       </div>
@@ -392,8 +403,6 @@ function ProjectCard({ project, onApply, appStatus }) {
         ))}
       </div>
 
-    
-
       {appStatus?.status === "Rejected" && appStatus?.adminNote && (
         <div style={{
           background: "var(--red-dim)", border: "1px solid rgba(227,73,53,0.2)",
@@ -406,7 +415,7 @@ function ProjectCard({ project, onApply, appStatus }) {
 
       <div style={{ marginTop: "auto" }}>
         {applied && chip && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: canReapply ? 10 : 0 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: canReapply ? 10 : 0, flexWrap: "wrap", gap: 6 }}>  {/* FIX: flexWrap + gap */}
             <span style={{
               fontSize: 12, fontWeight: 700, padding: "5px 14px",
               borderRadius: 20, background: chip.bg, color: chip.color,
@@ -461,7 +470,8 @@ export default function HomePage() {
       <main style={{ background: "var(--bg)", minHeight: "100vh", transition: "background 0.25s" }}>
 
         <section style={{
-          position: "relative", padding: "96px 28px 80px",
+          position: "relative",
+          padding: "96px 16px 80px",             // FIX: was 28px — reduced for mobile
           textAlign: "center", overflow: "hidden",
         }}>
           <div style={{
@@ -480,7 +490,8 @@ export default function HomePage() {
           <div style={{ position: "relative", maxWidth: 760, margin: "0 auto" }}>
             <h1 style={{
               fontFamily: "sans-serif",
-              fontSize: "clamp(32px, 5.5vw, 56px)", fontWeight: 800,
+              fontSize: "clamp(28px, 5.5vw, 56px)",  // FIX: clamp min 28px was 32px — safer on small screens
+              fontWeight: 800,
               color: "var(--text-primary)", lineHeight: 1.1,
               letterSpacing: "-1px", marginBottom: 20,
             }}>
@@ -488,7 +499,8 @@ export default function HomePage() {
               <span style={{ color: "var(--accent)" }}>Real Data.</span>
             </h1>
             <p style={{
-              fontSize: 17, color: "var(--text-secondary)",
+              fontSize: 16,                          // FIX: was 17 — slightly smaller on mobile
+              color: "var(--text-secondary)",
               lineHeight: 1.75, maxWidth: 540, margin: "0 auto 36px",
             }}>
               These aren't mock projects or guided tutorials. You'll work on live products, real datasets, and actual codebases — and ship something that matters.
@@ -496,32 +508,35 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section style={{ maxWidth: 1080, margin: "0 auto", padding: "0 28px 64px" }}>
+        <section style={{ maxWidth: 1080, margin: "0 auto", padding: "0 16px 64px" }}>  {/* FIX: was 28px */}
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
             <div style={{ width: 3, height: 18, borderRadius: 2, background: "var(--green)" }} />
             <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px" }}>Open Intern Projects</span>
-            
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 16, marginBottom: 72 }}>
+
+          {/* FIX: minmax 340px→280px so a single card fits on ~380px screens without overflowing */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 72 }}>
             {PROJECTS.map(p => (
               <ProjectCard key={p.id} project={p} onApply={setActiveProject} appStatus={myApps[p.id] ?? null} />
             ))}
           </div>
 
           <SectionHeading color="var(--yellow)" label="Process" />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 0, marginBottom: 64 }}>
+
+          {/* FIX: process steps — consistent borders + radius so stacking on mobile looks right */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 8, marginBottom: 64 }}>
             {[
               { step: "01", title: "Apply Online",     desc: "Select your project and submit your details. We read every application carefully." },
               { step: "02", title: "Technical Review", desc: "We review profiles in 5–7 days. Shortlisted candidates get a brief async task." },
               { step: "03", title: "Onboarding",       desc: "Repo access, tool setup, and your first task assigned — contributing from week one." },
               { step: "04", title: "Ship + Graduate",  desc: "Deliver your work. Receive your LOR, case study sign-off, and team endorsement." },
-            ].map((s, i) => (
+            ].map((s) => (
               <div key={s.step} style={{
                 background: "var(--bg-card)", padding: "20px 22px",
-                border: "1px solid var(--border)",
-                borderLeft: i > 0 ? "none" : "1px solid var(--border)",
-                borderRadius: i === 0 ? "var(--radius) 0 0 var(--radius)" : i === 3 ? "0 var(--radius) var(--radius) 0" : 0,
+                border: "1px solid var(--border)",   // FIX: uniform border on all sides / all steps
+                borderRadius: "var(--radius)",        // FIX: uniform radius — no connected-bar pattern that breaks on mobile
+                boxSizing: "border-box",
               }}>
                 <span className="badge badge-applied" style={{ marginBottom: 12, display: "inline-block", fontFamily: "monospace" }}>{s.step}</span>
                 <h4 style={{ fontFamily: "sans-serif", fontSize: 13, fontWeight: 700, color: "var(--text-primary)", marginBottom: 6 }}>{s.title}</h4>
@@ -539,7 +554,7 @@ export default function HomePage() {
               { q: "Is this just a certificate programme?", a: "No. You contribute to actual product code and real data. Quality and delivery matter — this is not participation-trophy work." },
               { q: "What tech stack do I need?",            a: "Each project lists its stack. Data Analyst: Python + SQL. Web Dev: React + Next.js. GitHub is mandatory for both." },
             ].map(faq => (
-              <div key={faq.q} className="card" style={{ marginBottom: 6 }}>
+              <div key={faq.q} className="card" style={{ marginBottom: 6, boxSizing: "border-box" }}>  {/* FIX: boxSizing */}
                 <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", marginBottom: 6 }}>{faq.q}</p>
                 <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>{faq.a}</p>
               </div>
@@ -548,7 +563,7 @@ export default function HomePage() {
 
         </section>
 
-        <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 28px" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 16px" }}>  {/* FIX: was 28px */}
           <Footer />
         </div>
       </main>
