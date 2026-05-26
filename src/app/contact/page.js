@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './contact.module.css';
+import styles from './Contact.module.css';
 import Navbar from '../Components/navbar';
 import Footer from '../Components/footer';
 
