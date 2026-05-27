@@ -1390,11 +1390,11 @@ function ApplicantDetails({ applicant, projectKey }) {
   const meta = PROJECT_META[projectKey] ?? { icon: "🎓", color: "#6366f1", label: "Internship" };
 
   const mentor = {
-    name: "Rahul Sharma",
-    email: "rahul.sharma@example.com",
-    phone: "+91 98765 43210",
-    designation: "Senior Software Engineer",
-    topmateLink: "https://topmate.io/rahul_sharma",
+    name: "Soon",
+    email: "Soon",
+    phone: "+91 000000000",
+    designation: "Soon",
+    topmateLink: "Soon",
   };
 
   return (
@@ -1442,7 +1442,7 @@ function ApplicantDetails({ applicant, projectKey }) {
 
         {mentor.topmateLink && (
           
-            href={mentor.topmateLink}
+           <a href={mentor.topmateLink}
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: "block", marginTop: 14, fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, padding: "8px 12px", background: "var(--accent-dim)", border: "1px solid var(--accent-border)", borderRadius: "var(--radius-sm)", textAlign: "center" }}
