@@ -1400,21 +1400,7 @@ function ApplicantDetails({ applicant, projectKey }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
-      {/* Project Card */}
-      <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: `${meta.color}18`, border: `1px solid ${meta.color}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
-            {meta.icon}
-          </div>
-          <div>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 2 }}>Assigned Project</p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>{meta.label}</p>
-          </div>
-        </div>
-        <div style={{ background: "var(--green-dim)", border: "1px solid rgba(34,160,107,0.3)", borderRadius: "var(--radius-sm)", padding: "8px 12px" }}>
-          <p style={{ fontSize: 11, color: "var(--green)", fontWeight: 600 }}>✓ Shortlisted — Internship Active</p>
-        </div>
-      </div>
+      
 
       {/* Mentor Card */}
       <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
@@ -1431,8 +1417,8 @@ function ApplicantDetails({ applicant, projectKey }) {
         </div>
 
         {[
-          mentor.email       && ["📧 Email",       mentor.email],
-          mentor.phone       && ["📞 Phone",        mentor.phone],
+          mentor.email       && ["Email",       mentor.email],
+          mentor.phone       && ["Phone",        mentor.phone],
         ].filter(Boolean).map(([l, v]) => (
           <div key={l} style={{ display: "flex", gap: 10, padding: "6px 0", borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
             <span style={{ fontSize: 11, color: "var(--text-muted)", width: 90, flexShrink: 0 }}>{l}</span>
@@ -1447,7 +1433,7 @@ function ApplicantDetails({ applicant, projectKey }) {
             rel="noopener noreferrer"
             style={{ display: "block", marginTop: 14, fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, padding: "8px 12px", background: "var(--accent-dim)", border: "1px solid var(--accent-border)", borderRadius: "var(--radius-sm)", textAlign: "center" }}
           >
-            📅 Book a Session on Topmate ↗
+            Book a Session on Topmate 
           </a>
         )}
       </div>
