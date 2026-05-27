@@ -1400,7 +1400,7 @@ function ApplicantDetails({ applicant, projectKey }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
-      
+  
 
       {/* Mentor Card */}
       <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
@@ -1485,7 +1485,7 @@ export default function InternshipClient({ clerkUser, applicant, track: initialT
                 {meta.label} — Internship Tracker
               </h1>
               <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                Hi {clerkUser.firstName ?? "there"} 👋 · Complete all 5 steps to finish your internship.
+                Hi {clerkUser.firstName ?? "there"}. Complete all 5 steps to finish your internship.
               </p>
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0, width: isMobile ? "100%" : "auto" }}>
@@ -1506,7 +1506,7 @@ export default function InternshipClient({ clerkUser, applicant, track: initialT
 
           {/* Tab bar */}
           <div style={{ display: "flex", gap: 4, marginTop: 16, borderTop: "1px solid var(--border)", paddingTop: 14 }}>
-            {[{ key: "tracker", label: "📋 Internship Steps" }, { key: "details", label: "👤 My Application" }].map(t => (
+            {[{ key: "tracker", label: "Internship Steps" }, { key: "details", label: "Mentor Details" }].map(t => (
               <button key={t.key} onClick={() => setView(t.key)} style={{
                 flex: isMobile ? 1 : "none",
                 padding: isMobile ? "9px 10px" : "7px 16px",
