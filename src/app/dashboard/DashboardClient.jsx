@@ -436,7 +436,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
                 onMouseLeave={e => e.currentTarget.style.opacity = "1"}
               >
-                🚀 Go to Internship Tracker →
+                Go to Internship Tracker →
               </a>
             </div>
           </div>
