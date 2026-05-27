@@ -10,7 +10,7 @@ const PROJECTS = [
     id: "data-analyst-intern",
     tag: "Data Analytics",
     tagColor: "green",
-    icon: "📊",
+  
     title: "Data Analyst Intern",
     subtitle: "Dig into real datasets, surface insights, and build dashboards that actually get used.",
     description: "You'll work directly with raw business data — cleaning, transforming, and analysing it using Python and SQL. Deliverables include an analytical report, a set of reusable SQL queries, and a Plotly/Power BI dashboard. This is hands-on data work: no toy datasets, no guided tutorials. You'll own the problem end-to-end.",
@@ -36,7 +36,7 @@ const PROJECTS = [
     id: "web-dev-intern",
     tag: "Web Development",
     tagColor: "accent",
-    icon: "🌐",
+  
     title: "Web Developer Intern",
     subtitle: "Ship a real feature on a live production website — from design to deployment.",
     description: "You'll be integrated into the dev workflow of an active product and assigned a specific feature to build end-to-end. This involves reading existing code, implementing UI and backend logic, writing clean commits, and getting your code reviewed and merged. The feature will be scoped before you start so you hit the ground running on day one.",
@@ -139,12 +139,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
               display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexShrink: 0,
             }}>
               <div style={{ display: "flex", gap: 10, alignItems: "center", minWidth: 0, flex: 1 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: 10,
-                  background: tagStyle.bg, border: `1px solid ${tagStyle.border}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 20, flexShrink: 0,
-                }}>{project.icon}</div>
+                
                 <div style={{ minWidth: 0 }}>
                   <p style={{ fontSize: 10, fontWeight: 700, color: tagStyle.color, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 3 }}>
                     {project.tag} · {project.product}
@@ -348,11 +343,7 @@ function ProjectCard({ project, onApply, appStatus }) {
       </div>
 
       <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12, paddingRight: 72 }}>
-        <div style={{
-          width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-          background: tagStyle.bg, border: `1px solid ${tagStyle.border}`,
-          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
-        }}>{project.icon}</div>
+        
         <div style={{ minWidth: 0 }}>
           <span style={{
             display: "inline-block", fontSize: 9, fontWeight: 700,
