@@ -1388,11 +1388,24 @@ function StepPanel({ stepConfig, stepData, isActive, isLocked, currentStep, appl
 // ─── Applicant Details Panel ───────────────────────────────────────────────────
 function ApplicantDetails({ applicant, projectKey }) {
   const meta = PROJECT_META[projectKey] ?? { icon: "🎓", color: "#6366f1", label: "Internship" };
+
+  const mentor = {
+    name: "Rahul Sharma",
+    email: "rahul.sharma@example.com",
+    phone: "+91 98765 43210",
+    designation: "Senior Software Engineer",
+    topmateLink: "https://topmate.io/rahul_sharma",
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+      {/* Project Card */}
       <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: `${meta.color}18`, border: `1px solid ${meta.color}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{meta.icon}</div>
+          <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: `${meta.color}18`, border: `1px solid ${meta.color}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
+            {meta.icon}
+          </div>
           <div>
             <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 2 }}>Assigned Project</p>
             <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>{meta.label}</p>
@@ -1403,36 +1416,42 @@ function ApplicantDetails({ applicant, projectKey }) {
         </div>
       </div>
 
+      {/* Mentor Card */}
       <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>Your Details</p>
+        <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>Your Mentor</p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+          <div style={{ width: 40, height: 40, borderRadius: "50%", flexShrink: 0, background: "#6366f118", border: "1px solid #6366f130", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#6366f1" }}>
+            {mentor.name?.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
+          </div>
+          <div>
+            {mentor.name && <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 2 }}>{mentor.name}</p>}
+            {mentor.designation && <p style={{ fontSize: 11, color: "var(--text-muted)" }}>{mentor.designation}</p>}
+          </div>
+        </div>
+
         {[
-          ["Full Name",       applicant.fullName],
-          ["Email",           applicant.email],
-          ["College",         applicant.college],
-          ["Branch",          applicant.branch],
-          ["Graduation Year", applicant.graduationYear],
-          ["CGPA / %",        applicant.cgpa || "—"],
-        ].map(([l, v]) => (
+          mentor.email       && ["📧 Email",       mentor.email],
+          mentor.phone       && ["📞 Phone",        mentor.phone],
+        ].filter(Boolean).map(([l, v]) => (
           <div key={l} style={{ display: "flex", gap: 10, padding: "6px 0", borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 11, color: "var(--text-muted)", width: 110, flexShrink: 0 }}>{l}</span>
+            <span style={{ fontSize: 11, color: "var(--text-muted)", width: 90, flexShrink: 0 }}>{l}</span>
             <span style={{ fontSize: 12, color: "var(--text-primary)", fontWeight: 500, wordBreak: "break-all", flex: 1 }}>{v}</span>
           </div>
         ))}
+
+        {mentor.topmateLink && (
+          
+            href={mentor.topmateLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: "block", marginTop: 14, fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, padding: "8px 12px", background: "var(--accent-dim)", border: "1px solid var(--accent-border)", borderRadius: "var(--radius-sm)", textAlign: "center" }}
+          >
+            📅 Book a Session on Topmate ↗
+          </a>
+        )}
       </div>
 
-      <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px" }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Links</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {[{ label: "📄 Resume", url: applicant.resumeLink }, { label: "GitHub", url: applicant.githubUrl }]
-            .filter(l => l.url)
-            .map(l => (
-              <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer"
-                style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, padding: "6px 10px", background: "var(--accent-dim)", border: "1px solid var(--accent-border)", borderRadius: "var(--radius-sm)", display: "block" }}>
-                {l.label} ↗
-              </a>
-            ))}
-        </div>
-      </div>
     </div>
   );
 }
