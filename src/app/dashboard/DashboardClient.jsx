@@ -338,7 +338,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 28 }}>{approvalPopup.icon}</span>
                   <h2 style={{ fontFamily: "sans-serif", fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>
-                    You're Shortlisted! 🎉
+                    You're Shortlisted
                   </h2>
                 </div>
                 <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{approvalPopup.projectName}</p>
@@ -356,7 +356,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                 borderRadius: "var(--radius-sm)", padding: "10px 14px", marginBottom: 18,
                 fontSize: 12, color: "var(--green)",
               }}>
-                🎊 Congratulations! Your application has been shortlisted.
+                Congratulations! Your application has been shortlisted.
               </div>
 
               {PROJECT_DETAILS[approvalPopup.projectName] && (() => {

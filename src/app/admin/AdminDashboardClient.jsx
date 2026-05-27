@@ -797,7 +797,7 @@ function PointsBadge({ points, size = "normal" }) {
       color: isMax ? "var(--green)" : points >= 70 ? "var(--blue)" : "var(--yellow)",
       border: `1px solid ${isMax ? "rgba(34,160,107,0.3)" : points >= 70 ? "rgba(99,102,241,0.3)" : "rgba(226,178,3,0.3)"}`,
     }}>
-      ⭐ {points}/100
+      {points}/100
     </span>
   );
 }
@@ -1118,7 +1118,7 @@ function StepRow({ stepConfig, stepData, isUnlocked, isCurrentlyActive, trackId,
                   {/* Points input */}
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, marginBottom: 12 }}>
                     <label style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap" }}>
-                      ⭐ Points (0–100)
+                      Points (0–100)
                     </label>
                     <input
                       type="number" min={0} max={100} value={points}
@@ -1158,7 +1158,7 @@ function StepRow({ stepConfig, stepData, isUnlocked, isCurrentlyActive, trackId,
               {/* Award points separately if already approved but no points yet */}
               {status === "approved" && stepData.pointsAwarded == null && (
                 <div style={{ marginTop: 12, padding: "12px 14px", background: "var(--yellow-dim)", border: "1px solid rgba(226,178,3,0.3)", borderRadius: "var(--radius-sm)" }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: "var(--yellow)", marginBottom: 8 }}>⭐ Points not yet awarded — set them now</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: "var(--yellow)", marginBottom: 8 }}>Points not yet awarded — set them now</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <input
                       type="number" min={0} max={100} value={points}
@@ -1267,7 +1267,7 @@ function Step5EvaluationRow({ track, trackId, onEvaluate, onToggle, busy }) {
           )}
           {isCompleted && (
             <p style={{ fontSize: 11, color: "var(--green)" }}>
-              ✓ Evaluation published · Internship completed · <strong>⭐ {totalPoints}/400 pts</strong>
+              ✓ Evaluation published · Internship completed · <strong>{totalPoints}/400 pts</strong>
             </p>
           )}
         </div>
@@ -1300,7 +1300,7 @@ function Step5EvaluationRow({ track, trackId, onEvaluate, onToggle, busy }) {
                 );
               })}
               <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", background: "var(--green-dim)", border: "1px solid rgba(34,160,107,0.3)", borderRadius: "var(--radius-sm)" }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: "var(--green)" }}>Total: ⭐ {totalPoints}/400</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "var(--green)" }}>Total: {totalPoints}/400</span>
               </div>
             </div>
           </div>
@@ -1411,7 +1411,7 @@ function TrackDetailModal({ track, onClose, onStepAction, onToggleStep, onDeadli
               <div style={{ height: "100%", borderRadius: 99, background: track.isCompleted ? "var(--green)" : "var(--accent)", width: `${progress}%`, transition: "width 0.5s" }} />
             </div>
             <span style={{ fontSize: 11, fontWeight: 700, color: track.isCompleted ? "var(--green)" : "var(--accent)", whiteSpace: "nowrap" }}>
-              {track.isCompleted ? `✓ Completed · ⭐ ${totalPoints}/400 pts` : `${progress}% · Step ${track.currentStep} active · ⭐ ${totalPoints}/400 pts`}
+              {track.isCompleted ? `✓ Completed · ${totalPoints}/400 pts` : `${progress}% · Step ${track.currentStep} active · ${totalPoints}/400 pts`}
             </span>
           </div>
         </div>
@@ -1631,7 +1631,7 @@ function InternshipTracksTab() {
                         </td>
                         <td style={{ padding: "12px 14px" }}>
                           <span style={{ fontSize: 11, fontWeight: 700, color: totalPts > 0 ? "var(--green)" : "var(--text-muted)" }}>
-                            {totalPts > 0 ? `⭐ ${totalPts}/400` : "—"}
+                            {totalPts > 0 ? `${totalPts}/400` : "—"}
                           </span>
                         </td>
                         <td style={{ padding: "12px 14px" }}>

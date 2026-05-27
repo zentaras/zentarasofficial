@@ -833,7 +833,7 @@ function PointsBadge({ points, maxPoints = 100, size = "normal" }) {
       border: `1px solid ${isMax ? "rgba(34,160,107,0.3)" : points >= 70 ? "rgba(99,102,241,0.3)" : "rgba(226,178,3,0.3)"}`,
       flexShrink: 0,
     }}>
-      ⭐ {points}/{maxPoints} pts
+      {points}/{maxPoints} pts
     </span>
   );
 }
@@ -979,14 +979,14 @@ function Step5CandidatePanel({ track }) {
       <div style={{ padding: "20px" }}>
         {/* Congrats banner */}
         <div style={{ background: "var(--green-dim)", border: "1px solid rgba(34,160,107,0.3)", borderRadius: "var(--radius-sm)", padding: "20px", marginBottom: 24, textAlign: "center" }}>
-          <div style={{ fontSize: 36, marginBottom: 8 }}>🎉</div>
+         
           <p style={{ fontFamily: "sans-serif", fontSize: 16, fontWeight: 800, color: "var(--green)", marginBottom: 4 }}>
             Congratulations! You've completed your internship.
           </p>
           <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Here is your performance evaluation from admin.</p>
           {/* Total points */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--bg-card)", border: "1px solid rgba(34,160,107,0.3)", borderRadius: 20, padding: "6px 16px" }}>
-            <span style={{ fontSize: 16 }}>⭐</span>
+            
             <span style={{ fontSize: 14, fontWeight: 800, color: "var(--green)" }}>{totalPoints} / {maxTotal}</span>
             <span style={{ fontSize: 11, color: "var(--text-muted)" }}>total points</span>
           </div>
@@ -1323,7 +1323,7 @@ function StepPanel({ stepConfig, stepData, isActive, isLocked, currentStep, appl
         {/* Max points note */}
         {points == null && !isLocked && (
           <p style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 8, marginLeft: 50 }}>
-            ⭐ Up to {stepConfig.maxPoints} points — awarded by admin after review
+            Up to {stepConfig.maxPoints} points — awarded by admin after review
           </p>
         )}
       </div>
@@ -1498,7 +1498,7 @@ export default function InternshipClient({ clerkUser, applicant, track: initialT
               {/* Running total points */}
               {totalPoints > 0 && (
                 <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>
-                  ⭐ {totalPoints} / 400 pts total
+                  {totalPoints} / 400 pts total
                 </span>
               )}
             </div>
@@ -1571,7 +1571,7 @@ export default function InternshipClient({ clerkUser, applicant, track: initialT
                       <div style={{ fontSize: 24, marginBottom: 4 }}>🎓</div>
                       <p style={{ fontSize: 12, fontWeight: 700, color: "var(--green)" }}>Completed!</p>
                       {totalPoints > 0 && (
-                        <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>⭐ {totalPoints}/400 pts</p>
+                        <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{totalPoints}/400 pts</p>
                       )}
                     </div>
                   )}
@@ -1627,14 +1627,14 @@ export default function InternshipClient({ clerkUser, applicant, track: initialT
             </p>
             {totalPoints > 0 && (
               <p style={{ fontSize: 14, fontWeight: 700, color: "var(--green)", marginBottom: 16 }}>
-                ⭐ Final Score: {totalPoints} / 400 points
+                Final Score: {totalPoints} / 400 points
               </p>
             )}
             <button
               onClick={() => setActiveStep(5)}
               style={{ padding: "10px 24px", background: "var(--green)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif", width: isMobile ? "100%" : "auto" }}
             >
-              View Your Certificate & Feedback →
+              View Your Certificate & Feedback 
             </button>
           </div>
         )}
