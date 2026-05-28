@@ -1,5 +1,6 @@
 
 
+
 // // app/api/admin/tracks/unlock/route.js
 // import { prisma } from "../../../../../lib/prisma";
 // import { auth } from "@clerk/nextjs/server";
@@ -7,9 +8,9 @@
 // const ADMIN_IDS = (process.env.ADMIN_CLERK_IDS ?? "").split(",").map(s => s.trim());
 
 // const STEP_TITLES = {
-//   1: "Internship Introduction & Project Briefing",
-//   2: "Week 1–2 Progress Update",
-//   3: "Mid-Point Project Status",
+//   1: "Project Briefing & Setup",
+//   2: "Week 1–2: EDA & Data Cleaning",
+//   3: "Mid-Point: Analysis & Insights",
 //   4: "Final Submission",
 //   5: "Certificate & Completion",
 // };
@@ -31,6 +32,14 @@
 //     return Response.json({ error: "Invalid step number" }, { status: 400 });
 //   }
 
+//   // Step 1 unlock is handled automatically via publish_briefing — block manual unlock
+//   if (action === "unlock" && stepNumber === 1) {
+//     return Response.json(
+//       { error: "Step 1 is auto-unlocked when you publish the project briefing." },
+//       { status: 400 }
+//     );
+//   }
+
 //   try {
 //     const track = await prisma.internshipTrack.findUnique({
 //       where: { id: trackId },
@@ -38,7 +47,7 @@
 //     });
 //     if (!track) return Response.json({ error: "Track not found" }, { status: 404 });
 
-//     // ── Update deadline only — don't touch currentStep ────────────────────────
+//     // ── update_deadline only ──────────────────────────────────────────────────
 //     if (action === "update_deadline") {
 //       const deadlineDate = deadline ? new Date(deadline) : null;
 //       const existing     = track.steps.find(s => s.stepNumber === stepNumber);
@@ -49,7 +58,6 @@
 //           data:  { deadline: deadlineDate },
 //         });
 //       } else {
-//         // Create stub step row just to store the deadline
 //         await prisma.internshipStep.create({
 //           data: {
 //             trackId,
@@ -63,14 +71,13 @@
 //       return Response.json({ ok: true, action: "deadline_updated" });
 //     }
 
-//     // ── Unlock: set currentStep to requested step ─────────────────────────────
+//     // ── unlock: advance currentStep ───────────────────────────────────────────
 //     if (action === "unlock") {
 //       await prisma.internshipTrack.update({
 //         where: { id: trackId },
 //         data:  { currentStep: stepNumber },
 //       });
 
-//       // Store deadline if provided
 //       if (deadline) {
 //         const deadlineDate = new Date(deadline);
 //         const existing     = track.steps.find(s => s.stepNumber === stepNumber);
@@ -94,7 +101,7 @@
 //       return Response.json({ ok: true, action: "unlocked", currentStep: stepNumber });
 //     }
 
-//     // ── Lock: set currentStep to stepNumber - 1 ───────────────────────────────
+//     // ── lock: roll back currentStep ───────────────────────────────────────────
 //     if (action === "lock") {
 //       const newCurrentStep = Math.max(1, stepNumber - 1);
 //       await prisma.internshipTrack.update({
@@ -114,16 +121,15 @@
 // app/api/admin/tracks/unlock/route.js
 import { prisma } from "../../../../../lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { getStepsByProjectKey } from "../../../../../lib/internshipSteps";
 
 const ADMIN_IDS = (process.env.ADMIN_CLERK_IDS ?? "").split(",").map(s => s.trim());
 
-const STEP_TITLES = {
-  1: "Project Briefing & Setup",
-  2: "Week 1–2: EDA & Data Cleaning",
-  3: "Mid-Point: Analysis & Insights",
-  4: "Final Submission",
-  5: "Certificate & Completion",
-};
+// Helper: get the correct step title for a given projectKey + stepNumber
+function getStepTitle(projectKey, stepNumber) {
+  const steps = getStepsByProjectKey(projectKey);
+  return steps.find(s => s.number === stepNumber)?.title ?? `Step ${stepNumber}`;
+}
 
 export async function POST(req) {
   const { userId } = await auth();
@@ -142,7 +148,7 @@ export async function POST(req) {
     return Response.json({ error: "Invalid step number" }, { status: 400 });
   }
 
-  // Step 1 unlock is handled automatically via publish_briefing — block manual unlock
+  // Step 1 unlock is handled automatically via publish_briefing
   if (action === "unlock" && stepNumber === 1) {
     return Response.json(
       { error: "Step 1 is auto-unlocked when you publish the project briefing." },
@@ -156,6 +162,9 @@ export async function POST(req) {
       include: { steps: true },
     });
     if (!track) return Response.json({ error: "Track not found" }, { status: 404 });
+
+    // Derive the correct step title from the track's role
+    const stepTitle = getStepTitle(track.projectKey, stepNumber);
 
     // ── update_deadline only ──────────────────────────────────────────────────
     if (action === "update_deadline") {
@@ -172,9 +181,9 @@ export async function POST(req) {
           data: {
             trackId,
             stepNumber,
-            stepTitle: STEP_TITLES[stepNumber] ?? `Step ${stepNumber}`,
-            status:    "pending",
-            deadline:  deadlineDate,
+            stepTitle,
+            status:   "pending",
+            deadline: deadlineDate,
           },
         });
       }
@@ -201,9 +210,9 @@ export async function POST(req) {
             data: {
               trackId,
               stepNumber,
-              stepTitle: STEP_TITLES[stepNumber] ?? `Step ${stepNumber}`,
-              status:    "pending",
-              deadline:  deadlineDate,
+              stepTitle,
+              status:   "pending",
+              deadline: deadlineDate,
             },
           });
         }
