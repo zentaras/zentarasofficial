@@ -119,3 +119,67 @@ model InternshipStep {
   @@index([status])
   @@map("internship_steps")
 }
+
+
+
+
+
+Project Assignment: 
+Build a dynamic candidate profile dashboard page. 
+The page should display all user-specific information including profile details, 
+internship status (ongoing/completed), skills, uploaded resume, and a week-wise activity 
+timeline showing user progress.
+
+The dashboard should support dynamic data rendering from APIs/database and be fully responsive 
+across desktop, tablet, and mobile devices. Focus on clean UI/UX, reusable components, proper 
+state management, loading/error states, and optimized frontend performance.
+
+
+
+Project Requirements
+-> Create a responsive user profile dashboard UI
+-> Fetch and display dynamic user data from backend/API
+Show:
+ 1. Profile image/avatar
+ 2. Full name
+ 3. Username
+ 4. Email
+ 5. Internship role/status
+ 6. Skills/tags
+ 7. Activity timeline
+ 8. Assigned tasks/projects
+ 9. Certificate link
+-> Add loading states and error handling
+-> Add hover effects, transitions, and clean UI interactions (not too heavy)
+-> Maintain consistent dark theme styling
+-> Ensure mobile responsiveness
+-> Use reusable components and clean folder structure
+-> Optimize performance and avoid unnecessary re-renders
+
+
+Tech Stack & Tools 
+React.js / Next.js
+Tailwind CSS
+Node.js + Express 
+MongoDB / PostgreSQL
+REST API integration
+Git & GitHub
+Axios / Fetch API
+Vercel / Netlify deployment
+
+
+Suggested Approach
+-> Analyze existing dashboard structure and UI consistency
+-> Create wireframe/layout for profile dashboard
+-> Build reusable components:
+ 1. Profile Card
+ 2. Status Card
+ 4. Skills Section
+ 5. Timeline Section
+ 6. Activity Feed
+-> Integrate backend APIs for dynamic data
+-> Implement responsive design for all screen sizes
+-> Add loading skeletons and error handling
+-> Improve UI polish with animations and hover states
+-> Test responsiveness, accessibility, and performance
+-> Deploy final implementation and submit GitHub repository + live demo link

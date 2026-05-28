@@ -213,7 +213,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 borderRadius: 8, padding: "10px 14px", fontSize: 12,
                 color: "var(--yellow)", marginBottom: 18,
               }}>
-                Unpaid · Experience-based internship. You'll receive a Letter of Recommendation + portfolio-ready work on completion.
+                Unpaid · Experience-based internship. You'll receive a Letter of Recommendation, Certificate + portfolio-ready work on completion.
               </div>
 
               <button onClick={() => setStep(2)} className="btn-primary" style={{ width: "100%", justifyContent: "center", padding: "11px 0" }}>
