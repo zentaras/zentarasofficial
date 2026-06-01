@@ -18,19 +18,7 @@ const PROJECTS = [
     description: "You'll work directly with raw business data — cleaning, transforming, and analysing it using Python and SQL. Deliverables include an analytical report, a set of reusable SQL queries, and a Plotly/Power BI dashboard. This is hands-on data work: no toy datasets, no guided tutorials. You'll own the problem end-to-end.",
     duration: "6 Weeks", mode: "Remote", type: "Unpaid · Experience-based",
     stack: ["Python", "Pandas", "SQL", "Plotly", "Power BI"],
-    requirements: [
-      "Comfortable with Python pandas — filtering, groupby, merges",
-      "SQL fundamentals: JOINs, window functions, aggregations",
-      "Basic stats: distributions, correlation, outlier detection",
-      "Any visualisation experience (matplotlib, seaborn, Tableau, etc.)",
-      "Git basics for version control",
-    ],
-    deliverables: [
-      "Cleaned, analysis-ready dataset with documented steps",
-      "SQL query library (10+ queries covering key business questions)",
-      "Interactive Plotly or Power BI dashboard",
-      "Written insight report with findings and recommendations",
-    ],
+  
     openings: 2, deadline: "June 10, 2026",
     product: "DataPulse", productDesc: "Our internal business intelligence layer",
   },
@@ -44,19 +32,7 @@ const PROJECTS = [
     description: "You'll be integrated into the dev workflow of an active product and assigned a specific feature to build end-to-end. This involves reading existing code, implementing UI and backend logic, writing clean commits, and getting your code reviewed and merged. The feature will be scoped before you start so you hit the ground running on day one.",
     duration: "6 Weeks", mode: "Remote", type: "Unpaid · Experience-based",
     stack: ["Next.js", "React", "Tailwind CSS", "PostgreSQL", "Prisma"],
-    requirements: [
-      "Solid React fundamentals — components, hooks, state management",
-      "Familiarity with Next.js App Router and server components",
-      "Basic CSS / Tailwind for layout and responsive design",
-      "Comfortable reading existing codebases and following conventions",
-      "Git workflow: branches, PRs, commit messages",
-    ],
-    deliverables: [
-      "Feature branch with clean, reviewed commits",
-      "Merged PR with working feature on production",
-      "Brief technical write-up on implementation decisions",
-      "Any tests or documentation relevant to the feature",
-    ],
+   
     openings: 1, deadline: "June 10, 2026",
     product: "Zentaras", productDesc: "Our live job-tracking and productivity web app",
   },
@@ -185,30 +161,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
               </p>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "16px 20px", marginBottom: 18 }}>
-                <div>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, paddingBottom: 5, borderBottom: "1px solid var(--border)" }}>
-                    What We Need
-                  </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                    {project.requirements.map(r => (
-                      <li key={r} style={{ fontSize: 12, color: "var(--text-secondary)", padding: "5px 0", borderBottom: "1px solid var(--border)", display: "flex", gap: 6, lineHeight: 1.5 }}>
-                        <span style={{ color: tagStyle.color, flexShrink: 0 }}>›</span> {r}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, paddingBottom: 5, borderBottom: "1px solid var(--border)" }}>
-                    You'll Ship
-                  </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                    {project.deliverables.map(d => (
-                      <li key={d} style={{ fontSize: 12, color: "var(--text-secondary)", padding: "5px 0", borderBottom: "1px solid var(--border)", display: "flex", gap: 6, lineHeight: 1.5 }}>
-                        <span style={{ color: "var(--green)", flexShrink: 0 }}>✓</span> {d}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                
               </div>
 
               <div style={{ marginBottom: 18 }}>
@@ -220,13 +173,7 @@ function ApplyModal({ project, onClose, onSuccess }) {
                 </div>
               </div>
 
-              <div style={{
-                background: "var(--yellow-dim)", border: "1px solid rgba(226,178,3,0.3)",
-                borderRadius: 8, padding: "10px 14px", fontSize: 12,
-                color: "var(--yellow)", marginBottom: 18,
-              }}>
-                ⚠️ Unpaid · Experience-based internship. You'll receive a Letter of Recommendation, Certificate + portfolio-ready work on completion.
-              </div>
+             
 
               <button onClick={() => setStep(2)} className="btn-primary" style={{ width: "100%", justifyContent: "center", padding: "11px 0" }}>
                 Continue to Application →
