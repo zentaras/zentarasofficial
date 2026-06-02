@@ -182,7 +182,7 @@ export default function InternshipPage() {
 /* ── DATA ────────────────────────────────────────────────────────────────── */
 
 const META_CHIPS = [
-  { icon: '🌐', label: '100% Remote' },
+  { icon: '🌐', label: 'Remote' },
   { icon: '📅', label: '4–8 Weeks' },
   { icon: '⏱', label: '8–15 hrs / week' },
   { icon: '🎓', label: 'B.Tech · BCA · MCA · B.Sc' },
