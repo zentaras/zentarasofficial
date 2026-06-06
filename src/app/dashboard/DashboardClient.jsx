@@ -240,7 +240,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
             <p style={{ fontFamily: "sans-serif", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1 }}>
               My Applications
             </p>
-            <a href="/dashboard" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, flexShrink: 0 }}>
+            <a href="/careers" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, flexShrink: 0 }}>
               + Apply to a project
             </a>
           </div>
@@ -306,7 +306,7 @@ export default function DashboardClient({ clerkUser, dbUser, allApps, primaryEma
                           Feedback from Admin
                         </p>
                         <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6 }}>{app.adminNote}</p>
-                        <a href="/dashboard" style={{ display: "inline-block", marginTop: 8, fontSize: 11, color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+                        <a href="/careers" style={{ display: "inline-block", marginTop: 8, fontSize: 11, color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
                           Improve & Reapply →
                         </a>
                       </div>
